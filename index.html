@@ -1175,6 +1175,54 @@ input:focus-visible,
   .mm-cover{font-size:28px}
 }
 
+/* Favorites page */
+.favorites-stats{
+  display:flex;flex-wrap:wrap;gap:10px;
+  margin-bottom:24px;font-size:13px;color:var(--txt-dim);
+  letter-spacing:.05em;
+}
+.favorites-stats b{color:var(--txt);font-weight:700}
+.favorites-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:14px;
+}
+.favorites-empty{
+  text-align:center;
+  padding:60px 24px;
+  background:rgba(255,255,255,.03);
+  border:1px dashed rgba(255,255,255,.12);
+  border-radius:24px;
+}
+.favorites-empty-art{
+  font-size:72px;line-height:1;
+  margin-bottom:24px;
+  filter:drop-shadow(0 8px 24px rgba(255,209,58,.25));
+  animation:emptyBob 2.6s ease-in-out infinite;
+}
+@keyframes emptyBob{
+  0%,100%{transform:translateY(0) rotate(-4deg)}
+  50%{transform:translateY(-8px) rotate(4deg)}
+}
+.favorites-empty h3{
+  font-family:var(--display);
+  font-size:clamp(28px,4vw,42px);
+  letter-spacing:-.01em;
+  margin-bottom:14px;
+}
+.favorites-empty p{
+  color:var(--txt-dim);
+  max-width:440px;margin:0 auto 28px;
+  font-size:15px;line-height:1.6;
+}
+.favorites-empty-cta{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:12px;
+}
+[data-theme="light"] .favorites-empty{
+  background:#fff;border:1px dashed var(--ln-strong);
+  box-shadow:var(--shadow-sm);
+}
+
 /* ============================================================
    ABOUT
 ============================================================ */
@@ -1354,6 +1402,113 @@ input:focus-visible,
 ::-webkit-scrollbar-track{background:#000}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:5px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.25)}
+
+/* Skeleton (loading placeholders) */
+@keyframes shimmer{
+  0%{background-position:-200% 0}
+  100%{background-position:200% 0}
+}
+.skeleton{
+  background:linear-gradient(90deg,
+    rgba(255,255,255,.05) 0%,
+    rgba(255,255,255,.12) 50%,
+    rgba(255,255,255,.05) 100%);
+  background-size:200% 100%;
+  animation:shimmer 1.6s linear infinite;
+  border-radius:6px;
+}
+[data-theme="light"] .skeleton{
+  background:linear-gradient(90deg,
+    rgba(15,15,18,.05) 0%,
+    rgba(15,15,18,.10) 50%,
+    rgba(15,15,18,.05) 100%);
+  background-size:200% 100%;
+}
+.skeleton-row{
+  display:grid;
+  grid-template-columns:42px 1fr auto auto;
+  align-items:center;gap:16px;
+  padding:14px 18px;
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:14px;
+}
+[data-theme="light"] .skeleton-row{
+  background:#fff;border:1px solid var(--ln);
+  box-shadow:var(--shadow-sm);
+}
+.skeleton-row .sk-rank{width:24px;height:24px;border-radius:6px}
+.skeleton-row .sk-lines{display:flex;flex-direction:column;gap:8px;min-width:0}
+.skeleton-row .sk-line{height:12px}
+.skeleton-row .sk-line.long{width:70%}
+.skeleton-row .sk-line.short{width:45%}
+.skeleton-row .sk-tag{width:60px;height:14px}
+.skeleton-row .sk-match{width:48px;height:22px}
+.skeleton-card{
+  display:flex;align-items:center;gap:14px;
+  padding:14px;
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:16px;
+}
+[data-theme="light"] .skeleton-card{
+  background:#fff;border:1px solid var(--ln);
+  box-shadow:var(--shadow-sm);
+}
+.skeleton-card .sk-icon{width:52px;height:52px;border-radius:12px;flex-shrink:0}
+.skeleton-card .sk-body{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+.skeleton-card .sk-line{height:12px}
+.skeleton-card .sk-line.long{width:80%}
+.skeleton-card .sk-line.short{width:55%}
+.skeleton-grid{
+  display:flex;flex-direction:column;gap:8px;
+}
+
+/* Toast notifications */
+.toasts{
+  position:fixed;top:90px;right:20px;z-index:300;
+  display:flex;flex-direction:column;gap:10px;
+  pointer-events:none;
+  max-width:calc(100vw - 40px);
+}
+@media (max-width:520px){
+  .toasts{top:80px;right:12px;left:12px;max-width:none}
+}
+.toast{
+  pointer-events:auto;
+  padding:14px 18px;
+  background:rgba(15,0,25,.94);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  font-size:14px;font-weight:600;
+  color:var(--txt);
+  box-shadow:0 14px 40px rgba(0,0,0,.45);
+  display:flex;align-items:center;gap:10px;
+  min-width:260px;max-width:400px;
+  animation:toastIn .28s cubic-bezier(.22,1,.36,1);
+}
+.toast .t-icon{font-size:18px;line-height:1}
+.toast.success{border-color:rgba(117,255,180,.6)}
+.toast.success .t-icon{color:var(--mint)}
+.toast.error{border-color:rgba(255,79,139,.6)}
+.toast.error .t-icon{color:var(--pink)}
+.toast.info{border-color:rgba(43,179,255,.6)}
+.toast.info .t-icon{color:var(--blue)}
+.toast.removing{animation:toastOut .22s ease forwards}
+@keyframes toastIn{
+  from{opacity:0;transform:translateX(50px) scale(.95)}
+  to{opacity:1;transform:translateX(0) scale(1)}
+}
+@keyframes toastOut{
+  to{opacity:0;transform:translateX(50px) scale(.95)}
+}
+[data-theme="light"] .toast{
+  background:#fff;color:var(--txt);
+  border:1px solid var(--ln);
+  box-shadow:var(--shadow-lg);
+}
 
 /* Spinner */
 .spin-mini{
@@ -1741,6 +1896,8 @@ input:focus-visible,
   <span id="statusText">MODEL CANLI</span>
 </div>
 
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="true"></div>
+
 <!-- ============================================================
      NAV
 ============================================================ -->
@@ -1755,6 +1912,7 @@ input:focus-visible,
         <button class="nav-tab active" data-page="home">Ana Sayfa</button>
         <button class="nav-tab" data-page="search">Şarkı Ara</button>
         <button class="nav-tab" data-page="dna">DNA Oluştur</button>
+        <button class="nav-tab" data-page="favorites">Favorilerim</button>
         <button class="nav-tab" data-page="about">Hakkında</button>
       </div>
       <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir" title="Tema değiştir">🌙</button>
@@ -1959,7 +2117,31 @@ input:focus-visible,
 </div>
 
 <!-- ============================================================
-     PAGE 4: ABOUT
+     PAGE 4: FAVORITES
+============================================================ -->
+<div class="page" id="page-favorites">
+
+  <section class="hero" style="min-height:42vh">
+    <div class="blob blob-1" style="background:var(--yellow)"></div>
+    <div class="blob blob-2" style="background:var(--pink)"></div>
+    <div class="hero-inner">
+      <span class="eyebrow" style="color:var(--yellow);border-color:var(--yellow)">⭐ Kütüphanen</span>
+      <h1 class="hero-title">
+        <span class="row gradient-yellow">FAVORİ</span>
+        <span class="row gradient-pink">ŞARKILARIN</span>
+      </h1>
+      <p class="hero-desc" id="favSubtitle">DNA'sını keşfettiğin ve yıldızladığın şarkılar burada.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div id="favoritesPage"></div>
+  </section>
+
+</div>
+
+<!-- ============================================================
+     PAGE 5: ABOUT
 ============================================================ -->
 <div class="page" id="page-about">
   <section class="hero" style="min-height:50vh">
@@ -2110,6 +2292,7 @@ async function init(){
   bindHeroCta();
   bindThemeToggle();
   renderMyMusic();
+  renderFavoritesPage();
 
   try{
     const info = await fetchJSON(`${API}/api/info`);
@@ -2283,7 +2466,12 @@ async function doSearch(q, dropdownMode){
     btn.dataset.label = btn.dataset.label || btn.innerHTML;
     btn.innerHTML = '<span class="spin-mini"></span>';
     btn.disabled = true;
-    results.innerHTML = `<div class="loading-block"><span class="spin-mini"></span> "${esc(q)}" aranıyor…</div>`;
+    results.innerHTML = `
+      <div style="font-size:13px;color:var(--txt-dim);margin-bottom:14px;letter-spacing:.1em">
+        "${esc(q)}" aranıyor…
+      </div>
+      ${skeletonCards(6)}
+    `;
   }
   try{
     const data = await fetchJSON(`${API}/api/search?q=${encodeURIComponent(q)}`);
@@ -2296,6 +2484,7 @@ async function doSearch(q, dropdownMode){
     if(!dropdownMode){
       results.innerHTML =
         `<div class="loading-block">Bağlantı kurulamadı. Flask sunucusunun açık olduğundan emin ol.</div>`;
+      toast('Bağlantı kurulamadı', 'error');
     }
   }finally{
     if(!dropdownMode){
@@ -2508,7 +2697,8 @@ async function runPredict(){
     renderResult(pred, sim2, values);
     fireConfetti();
   }catch(e){
-    alert('Tahmin başarısız: ' + e.message + '\nFlask sunucusu çalışıyor mu?');
+    toast('Tahmin başarısız. Flask sunucusu çalışıyor mu?', 'error', {duration:3600});
+    console.warn('Predict error:', e);
   }finally{
     btn.disabled = false;
     label.textContent = "DNA'mı Analiz Et";
@@ -2751,7 +2941,7 @@ async function openSong(s){
     <div class="similar-head">
       <h3 class="similar-title" style="font-size:28px">EN YAKIN<br><span class="modal-similar-count">10</span> ŞARKI</h3>
     </div>
-    <div class="loading-block" id="simLoading"><span class="spin-mini"></span> Aranıyor…</div>
+    <div id="simLoading">${skeletonRows(5)}</div>
     <div id="modalCountPicker"></div>
     <div class="similar-grid" id="modalSimilar" style="display:none"></div>
     <div id="modalPlaylist"></div>
@@ -2786,8 +2976,64 @@ async function openSong(s){
       title:`${s.track_name} Mix`
     });
   }catch(e){
-    document.getElementById('simLoading').textContent = 'Benzer şarkılar yüklenemedi.';
+    document.getElementById('simLoading').innerHTML = '<div class="loading-block">Benzer şarkılar yüklenemedi.</div>';
+    toast('Benzer şarkılar yüklenemedi', 'error');
   }
+}
+
+/* ============================================================
+   TOASTS + SKELETONS
+============================================================ */
+const TOAST_DEFAULTS = {duration:2400};
+let _toastCount = 0;
+function toast(msg, type, opts){
+  const host = document.getElementById('toasts');
+  if(!host) return;
+  const t = document.createElement('div');
+  t.className = 'toast' + (type ? ' '+type : '');
+  const icon = type === 'success' ? '✓'
+             : type === 'error' ? '✕'
+             : type === 'info' ? 'ℹ'
+             : '•';
+  t.innerHTML = `<span class="t-icon">${icon}</span><span>${esc(msg)}</span>`;
+  host.appendChild(t);
+  const dur = (opts && opts.duration) || TOAST_DEFAULTS.duration;
+  const id = ++_toastCount;
+  t.dataset.id = id;
+  setTimeout(()=>{
+    t.classList.add('removing');
+    setTimeout(()=>t.remove(), 240);
+  }, dur);
+}
+
+function skeletonRows(n){
+  let out = '<div class="skeleton-grid">';
+  for(let i=0;i<n;i++){
+    out += `<div class="skeleton-row">
+      <div class="skeleton sk-rank"></div>
+      <div class="sk-lines">
+        <div class="skeleton sk-line long"></div>
+        <div class="skeleton sk-line short"></div>
+      </div>
+      <div class="skeleton sk-tag"></div>
+      <div class="skeleton sk-match"></div>
+    </div>`;
+  }
+  return out + '</div>';
+}
+
+function skeletonCards(n){
+  let out = '<div class="results-grid">';
+  for(let i=0;i<n;i++){
+    out += `<div class="skeleton-card">
+      <div class="skeleton sk-icon"></div>
+      <div class="sk-body">
+        <div class="skeleton sk-line long"></div>
+        <div class="skeleton sk-line short"></div>
+      </div>
+    </div>`;
+  }
+  return out + '</div>';
 }
 
 /* ============================================================
@@ -2844,6 +3090,10 @@ function toggleFavorite(s){
   document.querySelectorAll(`.star-btn[data-fav-id="${CSS.escape(s.track_id)}"]`)
     .forEach(btn => btn.classList.toggle('is-fav', nowFav));
   renderMyMusic();
+  renderFavoritesPage();
+  if(typeof toast === 'function'){
+    toast(nowFav ? '⭐ Favorilere eklendi' : 'Favoriden çıkarıldı', nowFav ? 'success' : 'info');
+  }
   return nowFav;
 }
 function addRecent(s){
@@ -2891,6 +3141,74 @@ function bindStars(scopeEl){
       toggleFavorite(song);
     });
   });
+}
+
+function renderFavoritesPage(){
+  const host = document.getElementById('favoritesPage');
+  const sub = document.getElementById('favSubtitle');
+  if(!host) return;
+  const favs = getFavorites();
+
+  if(!favs.length){
+    if(sub) sub.textContent = 'Henüz favori şarkın yok — ekle, hep elinin altında olsun.';
+    host.innerHTML = `
+      <div class="favorites-empty">
+        <div class="favorites-empty-art">⭐</div>
+        <h3>HENÜZ FAVORİN<br>YOK</h3>
+        <p>DNA analizi yap veya bir şarkı ara, beğendiklerinin yanındaki ⭐ butonuna bas. Hepsi burada birikecek.</p>
+        <div class="favorites-empty-cta">
+          <button class="btn btn-primary" data-goto="dna">DNA Oluştur →</button>
+          <button class="btn btn-ghost" data-goto="search">Şarkı Ara</button>
+        </div>
+      </div>
+    `;
+    // Re-bind the goto buttons we just rendered
+    host.querySelectorAll('[data-goto]').forEach(b=>{
+      b.addEventListener('click', ()=>goto(b.dataset.goto));
+    });
+    return;
+  }
+
+  if(sub) sub.textContent = `${favs.length} şarkı yıldızladın. Tıkla, DNA'sını incele.`;
+
+  const clusterTally = {};
+  favs.forEach(s=>{
+    const c = s.cluster;
+    if(typeof c === 'number') clusterTally[c] = (clusterTally[c]||0)+1;
+  });
+  const topCluster = Object.entries(clusterTally).sort((a,b)=>b[1]-a[1])[0];
+
+  host.innerHTML = `
+    <div class="favorites-stats">
+      <span>📚 <b>${favs.length}</b> şarkı</span>
+      ${topCluster ? `<span>•  En çok: <b>K${topCluster[0]} · ${esc(clusterNames[+topCluster[0]] || DEFAULT_NAMES[+topCluster[0]])}</b> (${topCluster[1]})</span>` : ''}
+    </div>
+    <div class="favorites-grid"></div>
+  `;
+  const grid = host.querySelector('.favorites-grid');
+  favs.forEach(s=>{
+    const st = CLUSTER_STYLES[s.cluster] || {emoji:'🎵', grad:'linear-gradient(135deg,var(--pink),var(--purple))', text:'light'};
+    const card = document.createElement('div');
+    card.className = 'song-card';
+    card.dataset.id = s.track_id || '';
+    card._songData = s;
+    card.innerHTML = `
+      <div class="song-icon" style="background:${st.grad}">${st.emoji}</div>
+      <div class="song-meta">
+        <div class="song-title" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
+        <div class="song-artist" title="${esc(s.artists)}${s.track_genre?` · ${esc(s.track_genre)}`:''}">${esc(s.artists)}${s.track_genre?` · ${esc(s.track_genre)}`:''}</div>
+      </div>
+      ${starButton(s)}
+      ${playLinks(s)}
+      ${typeof s.popularity === 'number' ? `<div class="song-pop">${s.popularity}</div>` : ''}
+    `;
+    card.addEventListener('click', e=>{
+      if(e.target.closest('.star-btn,a,button')) return;
+      fetchSongAndOpen(s.track_id);
+    });
+    grid.appendChild(card);
+  });
+  bindStars(grid);
 }
 
 function renderMyMusic(){
@@ -3101,9 +3419,11 @@ function renderPlaylist(host, songs, title){
     try{
       await navigator.clipboard.writeText(trackIdsLines);
       e.currentTarget.textContent = '✓ Kopyalandı';
+      toast(`${ids.length} şarkı linki panoya kopyalandı`, 'success');
       setTimeout(()=>{ e.currentTarget.textContent = '🔗 Linkleri Kopyala'; }, 1800);
     }catch(_){
       e.currentTarget.textContent = '✗ Kopyalanamadı';
+      toast('Linkler kopyalanamadı', 'error');
     }
   });
   host.querySelectorAll('.playlist-track').forEach(el=>{
