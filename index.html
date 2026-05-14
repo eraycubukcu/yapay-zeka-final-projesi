@@ -2244,6 +2244,7 @@ async function runPredict(){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({...values, cluster:pred.svm_cluster, n_top:50, count:50, limit:50})
     });
+    sim2.songs = dedupeSongs(sim2.songs);
     lastResult = {pred, sim:sim2, values};
     renderResult(pred, sim2, values);
     fireConfetti();
@@ -2508,6 +2509,7 @@ async function openSong(s){
         n_top:50, count:50, limit:50
       })
     });
+    sim.songs = dedupeSongs(sim.songs).filter(x => x.track_id !== s.track_id);
     const list = document.getElementById('modalSimilar');
     document.getElementById('simLoading').style.display = 'none';
     list.style.display = 'flex';
@@ -2527,6 +2529,19 @@ async function openSong(s){
 /* ============================================================
    SIMILAR + PLAYLIST
 ============================================================ */
+function dedupeSongs(songs){
+  if(!Array.isArray(songs)) return [];
+  const seen = new Set();
+  const out = [];
+  for(const s of songs){
+    const key = s.track_id || `${(s.track_name||'').toLowerCase()}|${(s.artists||'').toLowerCase()}`;
+    if(!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(s);
+  }
+  return out;
+}
+
 function buildCountPicker(maxAvailable, defaultTitle){
   const cap = Math.min(50, Math.max(5, maxAvailable || 10));
   const initial = Math.min(10, cap);
