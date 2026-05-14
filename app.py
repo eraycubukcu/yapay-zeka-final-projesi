@@ -216,12 +216,15 @@ print("✅ API endpoint'leri tanımlandı")
 def api_similar():
     """
     🎵 BENZER ŞARKI ÖNERİSİ
-    Verilen akustik değerlere en yakın 10 şarkıyı döner
+    Verilen akustik değerlere en yakın N şarkıyı döner (varsayılan 10,
+    request body'sindeki n_top/count/limit ile değiştirilebilir, max 200).
     """
     from sklearn.metrics.pairwise import euclidean_distances
 
     data = request.get_json()
     cluster_id = int(data['cluster'])
+    n_top = int(data.get('n_top') or data.get('count') or data.get('limit') or 10)
+    n_top = max(1, min(n_top, 200))
 
     # Kullanıcı vektörü
     user_features = np.array([[
@@ -240,8 +243,8 @@ def api_similar():
     distances = euclidean_distances(user_norm, cluster_norm)[0]
     cluster_songs['distance'] = distances
 
-    # En yakın 10'u al
-    similar = cluster_songs.nsmallest(10, 'distance').reset_index(drop=True)
+    # En yakın N'i al
+    similar = cluster_songs.nsmallest(n_top, 'distance').reset_index(drop=True)
     max_dist = distances.max()
 
     # Top-10 için normalize edilmiş feature matrisini al (reasons hesabı için)
