@@ -852,7 +852,9 @@ input:focus-visible,
   font-size:22px;
   background:linear-gradient(135deg,var(--mint),var(--green));
   -webkit-background-clip:text;background-clip:text;color:transparent;
+  cursor:help;
 }
+.song-pop, .ct-track-pop, .pt-match{cursor:help}
 .reason-chips{
   display:flex;flex-wrap:wrap;gap:6px;
   margin-top:8px;
@@ -3018,7 +3020,7 @@ function renderResults(songs){
       </div>
       ${starButton(s)}
       ${playLinks(s)}
-      <div class="song-pop">${s.popularity}</div>
+      <div class="song-pop" title="Spotify popülerlik puanı: ${s.popularity}/100 — son dönem dinlenme yoğunluğu">${s.popularity}</div>
     `;
     card.addEventListener('click', e=>{
       if(e.target.closest('.star-btn,a,button')) return;
@@ -3414,7 +3416,7 @@ async function loadClusterTop(cid, host){
           <div class="ct-track-name" title="${esc(t.track_name)}">${esc(t.track_name)}</div>
           <div class="ct-track-artist" title="${esc(t.artists)}">${esc(t.artists)}</div>
         </div>
-        <div class="ct-track-pop">${t.popularity}</div>
+        <div class="ct-track-pop" title="Spotify popülerlik puanı: ${t.popularity}/100 — son dönem dinlenme yoğunluğu">${t.popularity}</div>
       `;
       el.addEventListener('click', ()=> fetchSongAndOpen(t.track_id));
       tracksEl.appendChild(el);
@@ -4026,7 +4028,7 @@ function renderFavoritesPage(){
       </div>
       ${starButton(s)}
       ${playLinks(s)}
-      ${typeof s.popularity === 'number' ? `<div class="song-pop">${s.popularity}</div>` : ''}
+      ${typeof s.popularity === 'number' ? `<div class="song-pop" title="Spotify popülerlik puanı: ${s.popularity}/100">${s.popularity}</div>` : ''}
     `;
     card.addEventListener('click', e=>{
       if(e.target.closest('.star-btn,a,button')) return;
@@ -4169,7 +4171,7 @@ function renderSimilarList(listEl, songs){
       ${starButton(s)}
       ${playLinks(s)}
       <div class="similar-genre">${esc(s.track_genre)}</div>
-      <div class="similar-match">${s.match_percent}%</div>
+      <div class="similar-match" title="%${s.match_percent} DNA eşleşmesi — akustik özellikleri ne kadar örtüşüyor">${s.match_percent}%</div>
     </div>
   `).join('');
   listEl.querySelectorAll('.similar-row').forEach((el,i)=>{
@@ -4234,7 +4236,7 @@ function renderPlaylist(host, songs, title){
             </div>
             ${starButton(s)}
             ${playLinks(s)}
-            <div class="pt-match">${s.match_percent}%</div>
+            <div class="pt-match" title="%${s.match_percent} DNA eşleşmesi — akustik özellikleri ne kadar örtüşüyor">${s.match_percent}%</div>
           </div>
         `).join('')}
       </div>
