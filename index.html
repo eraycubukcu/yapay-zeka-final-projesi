@@ -37,7 +37,9 @@ body{
   min-height:100vh;
   -webkit-font-smoothing:antialiased;
   line-height:1.5;
+  padding-top:70px;
 }
+@media (max-width:720px){body{padding-top:60px}}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input{font-family:inherit;color:inherit;border:none;outline:none;background:none}
 a{color:inherit;text-decoration:none}
@@ -124,7 +126,7 @@ a{color:inherit;text-decoration:none}
    STICKY NAV
 ============================================================ */
 .nav{
-  position:sticky;top:0;z-index:100;
+  position:fixed;top:0;left:0;right:0;z-index:100;
   background:rgba(10,0,20,.7);
   backdrop-filter:blur(24px);
   -webkit-backdrop-filter:blur(24px);
@@ -792,7 +794,7 @@ a{color:inherit;text-decoration:none}
 }
 .similar-row{
   display:grid;
-  grid-template-columns:42px 1fr auto auto;
+  grid-template-columns:42px 1fr auto auto auto;
   align-items:center;gap:16px;
   padding:14px 18px;
   background:rgba(255,255,255,.03);
@@ -839,7 +841,7 @@ a{color:inherit;text-decoration:none}
   white-space:nowrap;
 }
 @media (max-width:520px){
-  .similar-row{grid-template-columns:32px 1fr auto;gap:10px;padding:12px}
+  .similar-row{grid-template-columns:32px 1fr auto auto;gap:10px;padding:12px}
   .similar-genre{display:none}
   .reason-chip{font-size:10px;padding:3px 8px}
 }
@@ -959,6 +961,30 @@ a{color:inherit;text-decoration:none}
   text-transform:uppercase;
 }
 .modal-body{padding:32px}
+
+/* ============================================================
+   PLAY LINKS (Spotify / YouTube)
+============================================================ */
+.play-links{display:inline-flex;gap:6px;align-items:center;flex-shrink:0}
+.play-icon{
+  display:inline-grid;place-items:center;
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  transition:transform .15s ease, background .15s ease, color .15s ease;
+  flex-shrink:0;
+}
+.play-icon svg{width:16px;height:16px;display:block}
+.play-icon:hover{transform:scale(1.12)}
+.play-icon.spotify{color:#1DB954}
+.play-icon.spotify:hover{background:#1DB954;color:#000}
+.play-icon.youtube{color:#FF0033}
+.play-icon.youtube:hover{background:#FF0033;color:#fff}
+.play-links.lg{gap:10px;margin-top:18px}
+.play-links.lg .play-icon{width:44px;height:44px;background:rgba(0,0,0,.28)}
+.play-links.lg .play-icon svg{width:22px;height:22px}
+[data-theme="light"] .play-icon{background:rgba(0,0,0,.06)}
+[data-theme="light"] .play-icon.spotify:hover{color:#fff}
 
 /* ============================================================
    CONFETTI
@@ -1582,6 +1608,7 @@ a{color:inherit;text-decoration:none}
       <div class="modal-name" id="modalName"></div>
       <div class="modal-artist" id="modalArtist"></div>
       <div class="modal-cluster" id="modalCluster"></div>
+      <div id="modalActions"></div>
     </div>
     <div class="modal-body" id="modalBody"></div>
   </div>
@@ -1850,6 +1877,7 @@ function renderDropdown(songs){
           <div class="dropdown-title">${esc(s.track_name)}</div>
           <div class="dropdown-artist">${esc(s.artists)}</div>
         </div>
+        ${playLinks(s)}
       </div>
     `;
   }).join('');
@@ -1885,6 +1913,7 @@ function renderResults(songs){
         <div class="song-title">${esc(s.track_name)}</div>
         <div class="song-artist">${esc(s.artists)} · ${esc(s.track_genre)}</div>
       </div>
+      ${playLinks(s)}
       <div class="song-pop">${s.popularity}</div>
     `;
     card.addEventListener('click', ()=>openSong(s));
@@ -2090,6 +2119,7 @@ function renderResult(pred, sim, values){
             <div class="similar-artist">${esc(s.artists)}</div>
             ${renderReasons(s.reasons)}
           </div>
+          ${playLinks(s)}
           <div class="similar-genre">${esc(s.track_genre)}</div>
           <div class="similar-match">${s.match_percent}%</div>
         </div>
@@ -2250,6 +2280,7 @@ async function openSong(s){
   document.getElementById('modalArtist').textContent = s.artists;
   document.getElementById('modalCluster').innerHTML =
     `${st.emoji} K${s.cluster} · ${esc(s.cluster_name || clusterNames[s.cluster] || DEFAULT_NAMES[s.cluster])}`;
+  document.getElementById('modalActions').innerHTML = playLinks(s, 'lg');
 
   const body = document.getElementById('modalBody');
   body.innerHTML = `
@@ -2303,6 +2334,7 @@ async function openSong(s){
           <div class="similar-artist">${esc(ss.artists)}</div>
           ${renderReasons(ss.reasons)}
         </div>
+        ${playLinks(ss)}
         <div class="similar-genre">${esc(ss.track_genre)}</div>
         <div class="similar-match">${ss.match_percent}%</div>
       </div>
@@ -2322,6 +2354,21 @@ function esc(s){
   return String(s ?? '').replace(/[&<>"']/g, c=>({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[c]));
+}
+
+const SPOTIFY_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/></svg>';
+const YOUTUBE_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>';
+
+function playLinks(s, size){
+  const cls = size === 'lg' ? 'play-links lg' : 'play-links';
+  const spotifyUrl = s.track_id ? `https://open.spotify.com/track/${encodeURIComponent(s.track_id)}` : '';
+  const ytQuery = encodeURIComponent(`${s.artists || ''} ${s.track_name || ''}`.trim());
+  const youtubeUrl = `https://www.youtube.com/results?search_query=${ytQuery}`;
+  const spotify = spotifyUrl
+    ? `<a class="play-icon spotify" href="${spotifyUrl}" target="_blank" rel="noopener noreferrer" title="Spotify'da aç" onclick="event.stopPropagation()">${SPOTIFY_SVG}</a>`
+    : '';
+  const youtube = `<a class="play-icon youtube" href="${youtubeUrl}" target="_blank" rel="noopener noreferrer" title="YouTube'da ara" onclick="event.stopPropagation()">${YOUTUBE_SVG}</a>`;
+  return `<span class="${cls}">${spotify}${youtube}</span>`;
 }
 
 function renderReasons(reasons){
