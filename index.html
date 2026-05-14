@@ -1645,6 +1645,33 @@ input:focus-visible,
   box-shadow:var(--shadow-lg);
 }
 
+/* Stagger entrance + reason chip highlight */
+@keyframes staggerIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.stagger-in{
+  --i:0;
+  animation:staggerIn .42s cubic-bezier(.22,1,.36,1) both;
+  animation-delay:calc(var(--i) * 40ms);
+}
+@media (prefers-reduced-motion: reduce){
+  .stagger-in{animation:none}
+}
+/* Reason chips pop on row hover */
+.similar-row .reason-chip{transition:all .2s ease}
+.similar-row:hover .reason-chip{
+  background:rgba(255,79,139,.14);
+  border-color:rgba(255,79,139,.35);
+  color:var(--txt);
+  transform:translateY(-1px);
+}
+[data-theme="light"] .similar-row:hover .reason-chip{
+  background:rgba(255,79,139,.08);
+  border-color:rgba(255,79,139,.3);
+  color:var(--pink);
+}
+
 /* Spinner */
 .spin-mini{
   width:18px;height:18px;
@@ -2829,8 +2856,9 @@ function buildClusters(){
     const st = CLUSTER_STYLES[i];
     const name = clusterNames[i] || DEFAULT_NAMES[i];
     const card = document.createElement('div');
-    card.className = 'cluster-card text-' + st.text;
+    card.className = 'cluster-card stagger-in text-' + st.text;
     card.style.setProperty('--grad', st.grad);
+    card.style.setProperty('--i', i);
     card.innerHTML = `
       <div class="cluster-arrow">→</div>
       <div class="cluster-emoji">${st.emoji}</div>
@@ -2975,10 +3003,11 @@ function renderResults(songs){
     <div class="results-grid" id="resultsGrid"></div>
   `;
   const grid = document.getElementById('resultsGrid');
-  songs.slice(0,30).forEach(s=>{
+  songs.slice(0,30).forEach((s,i)=>{
     const st = CLUSTER_STYLES[s.cluster];
     const card = document.createElement('div');
-    card.className = 'song-card';
+    card.className = 'song-card stagger-in';
+    card.style.setProperty('--i', Math.min(i, 12));
     card.dataset.id = s.track_id || '';
     card._songData = s;
     card.innerHTML = `
@@ -3374,9 +3403,10 @@ async function loadClusterTop(cid, host){
 
   const tracksEl = host.querySelector('.ct-tracks');
   if(tracksEl && data.top_songs){
-    data.top_songs.forEach(t => {
+    data.top_songs.forEach((t,i) => {
       const el = document.createElement('div');
-      el.className = 'ct-track';
+      el.className = 'ct-track stagger-in';
+      el.style.setProperty('--i', Math.min(i, 14));
       el.dataset.id = t.track_id;
       el.innerHTML = `
         <div class="ct-track-icon" style="background:${st.grad}">${st.emoji}</div>
@@ -3981,10 +4011,11 @@ function renderFavoritesPage(){
     <div class="favorites-grid"></div>
   `;
   const grid = host.querySelector('.favorites-grid');
-  favs.forEach(s=>{
+  favs.forEach((s,i)=>{
     const st = CLUSTER_STYLES[s.cluster] || {emoji:'🎵', grad:'linear-gradient(135deg,var(--pink),var(--purple))', text:'light'};
     const card = document.createElement('div');
-    card.className = 'song-card';
+    card.className = 'song-card stagger-in';
+    card.style.setProperty('--i', Math.min(i, 12));
     card.dataset.id = s.track_id || '';
     card._songData = s;
     card.innerHTML = `
@@ -4018,9 +4049,9 @@ function renderMyMusic(){
   const favCount = document.getElementById('mmFavCount');
   if(!favRail || !recRail) return;
 
-  const buildCard = s => {
+  const buildCard = (s, i) => {
     const st = CLUSTER_STYLES[s.cluster] || {emoji:'🎵', grad:'linear-gradient(135deg,var(--pink),var(--purple))'};
-    return `<div class="mm-card" data-id="${esc(s.track_id)}">
+    return `<div class="mm-card stagger-in" data-id="${esc(s.track_id)}" style="--i:${Math.min(i,10)}">
       ${starButton(s)}
       <div class="mm-cover" style="background:${st.grad}">${st.emoji}</div>
       <div class="mm-title" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
@@ -4029,10 +4060,10 @@ function renderMyMusic(){
   };
 
   favRail.innerHTML = favs.length
-    ? favs.map(buildCard).join('')
+    ? favs.map((s,i)=>buildCard(s,i)).join('')
     : '<div class="mm-empty">Henüz favori yok — şarkı kartlarındaki ⭐ ile ekle.</div>';
   recRail.innerHTML = recs.length
-    ? recs.map(buildCard).join('')
+    ? recs.map((s,i)=>buildCard(s,i)).join('')
     : '';
 
   favBlock.hidden = false;
@@ -4128,7 +4159,7 @@ function bindSimilarSection(scopeEl, songs, opts){
 function renderSimilarList(listEl, songs){
   listEl.style.display = 'flex';
   listEl.innerHTML = songs.map((s,i)=>`
-    <div class="similar-row" data-id="${s.track_id||''}">
+    <div class="similar-row stagger-in" data-id="${s.track_id||''}" style="--i:${Math.min(i,15)}">
       <div class="similar-rank">${(i+1).toString().padStart(2,'0')}</div>
       <div class="similar-meta">
         <div class="similar-name" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
@@ -4195,7 +4226,7 @@ function renderPlaylist(host, songs, title){
       </div>
       <div class="playlist-tracks">
         ${songs.map((s,i)=>`
-          <div class="playlist-track" data-id="${s.track_id||''}">
+          <div class="playlist-track stagger-in" data-id="${s.track_id||''}" style="--i:${Math.min(i,20)}">
             <div class="pt-num">${(i+1).toString().padStart(2,'0')}</div>
             <div class="pt-meta">
               <div class="pt-name" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
