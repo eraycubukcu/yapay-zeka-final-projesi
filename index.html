@@ -820,7 +820,7 @@ input:focus-visible,
 }
 .similar-row{
   display:grid;
-  grid-template-columns:42px 1fr auto auto auto;
+  grid-template-columns:42px 1fr auto auto auto auto;
   align-items:center;gap:16px;
   padding:14px 18px;
   background:rgba(255,255,255,.03);
@@ -867,7 +867,7 @@ input:focus-visible,
   white-space:nowrap;
 }
 @media (max-width:520px){
-  .similar-row{grid-template-columns:32px 1fr auto auto;gap:10px;padding:12px}
+  .similar-row{grid-template-columns:32px 1fr auto auto auto;gap:10px;padding:12px}
   .similar-genre{display:none}
   .reason-chip{font-size:10px;padding:3px 8px}
 }
@@ -1013,7 +1013,7 @@ input:focus-visible,
   padding:8px 16px 16px;
 }
 .playlist-track{
-  display:grid;grid-template-columns:44px 1fr auto auto;
+  display:grid;grid-template-columns:44px 1fr auto auto auto;
   gap:14px;align-items:center;
   padding:12px 14px;border-radius:12px;
   transition:background .2s;
@@ -1043,8 +1043,136 @@ input:focus-visible,
   .playlist-header{grid-template-columns:1fr;text-align:center;padding:22px 18px}
   .playlist-cover{width:96px;height:96px;font-size:42px;margin:0 auto}
   .playlist-actions{flex-direction:row;justify-content:center;flex-wrap:wrap}
-  .playlist-track{grid-template-columns:36px 1fr auto;gap:10px;padding:10px 12px}
+  .playlist-track{grid-template-columns:36px 1fr auto auto;gap:10px;padding:10px 12px}
   .pt-match{display:none}
+}
+
+/* ============================================================
+   MY MUSIC (Favorilerin · Son Baktıkların)
+============================================================ */
+.my-music{margin:48px 0 16px}
+.mm-block{margin-bottom:28px}
+.mm-block[hidden]{display:none}
+.mm-head{
+  display:flex;align-items:center;gap:10px;
+  font-size:12px;font-weight:800;letter-spacing:.25em;
+  text-transform:uppercase;
+  color:var(--txt-dim);
+  margin-bottom:14px;padding:0 4px;
+}
+.mm-count{
+  display:inline-grid;place-items:center;
+  min-width:26px;height:22px;padding:0 8px;border-radius:100px;
+  font-size:11px;letter-spacing:0;
+  background:rgba(255,79,139,.18);color:var(--pink);
+}
+.mm-rail{
+  display:flex;gap:12px;overflow-x:auto;
+  padding:4px 4px 14px;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:thin;
+}
+.mm-rail::-webkit-scrollbar{height:6px}
+.mm-rail::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:10px}
+.mm-card{
+  flex:0 0 156px;
+  scroll-snap-align:start;
+  position:relative;
+  padding:14px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  cursor:pointer;
+  transition:transform .2s,background .2s,border-color .2s;
+}
+.mm-card:hover{
+  transform:translateY(-4px);
+  background:rgba(255,255,255,.07);
+  border-color:rgba(255,255,255,.14);
+}
+.mm-cover{
+  width:100%;aspect-ratio:1/1;
+  border-radius:10px;
+  background:var(--grad,linear-gradient(135deg,var(--pink),var(--purple)));
+  display:grid;place-items:center;
+  font-size:34px;color:#fff;
+  margin-bottom:10px;
+}
+.mm-title{
+  font-size:13px;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.mm-artist{
+  font-size:11px;color:var(--txt-dim);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-top:2px;
+}
+.mm-empty{
+  padding:18px;
+  font-size:13px;color:var(--txt-dim);
+  text-align:center;
+}
+
+/* Star button (favori) */
+.star-btn{
+  width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:var(--txt-dim);
+  transition:all .2s;
+  flex-shrink:0;
+}
+.star-btn:hover{
+  background:rgba(255,209,58,.15);
+  border-color:var(--yellow);
+  color:var(--yellow);
+  transform:scale(1.08);
+}
+.star-btn.is-fav{
+  background:rgba(255,209,58,.18);
+  border-color:var(--yellow);
+  color:var(--yellow);
+}
+.star-btn.is-fav .star-svg{transform:scale(1.05)}
+.star-svg{width:18px;height:18px;fill:currentColor;transition:transform .2s}
+.star-btn.lg{width:48px;height:48px}
+.star-btn.lg .star-svg{width:22px;height:22px}
+/* Inline mini-star inside mm-card */
+.mm-card .star-btn{
+  position:absolute;top:8px;right:8px;
+  width:28px;height:28px;
+}
+.mm-card .star-btn .star-svg{width:14px;height:14px}
+
+/* Light theme */
+[data-theme="light"] .mm-card{
+  background:#fff;border:1px solid var(--ln);
+  box-shadow:var(--shadow-sm);
+}
+[data-theme="light"] .mm-card:hover{
+  background:#fff;border-color:var(--ln-strong);
+  box-shadow:var(--shadow-md);
+}
+[data-theme="light"] .mm-rail::-webkit-scrollbar-thumb{background:rgba(15,15,18,.18)}
+[data-theme="light"] .mm-count{background:rgba(255,79,139,.12);color:var(--pink)}
+[data-theme="light"] .star-btn{
+  background:#fff;border:1px solid var(--ln-strong);
+  color:var(--txt-dim);
+  box-shadow:var(--shadow-sm);
+}
+[data-theme="light"] .star-btn:hover{
+  background:#fff;color:var(--orange);
+  border-color:var(--orange);
+}
+[data-theme="light"] .star-btn.is-fav{
+  background:#fff;color:var(--orange);
+  border-color:var(--orange);
+}
+
+@media (max-width:520px){
+  .mm-card{flex:0 0 132px;padding:12px}
+  .mm-cover{font-size:28px}
 }
 
 /* ============================================================
@@ -1678,6 +1806,18 @@ input:focus-visible,
     </div>
   </section>
 
+  <!-- MY MUSIC (favorilerin + son baktıkların) -->
+  <section class="my-music" id="myMusic" hidden>
+    <div class="mm-block" id="mmFavorites" hidden>
+      <div class="mm-head">⭐ Favorilerin <span class="mm-count" id="mmFavCount">0</span></div>
+      <div class="mm-rail" id="mmFavRail"></div>
+    </div>
+    <div class="mm-block" id="mmRecents" hidden>
+      <div class="mm-head">🕒 Son Baktıkların</div>
+      <div class="mm-rail" id="mmRecRail"></div>
+    </div>
+  </section>
+
   <!-- CLUSTERS -->
   <section class="section">
     <div class="section-head">
@@ -1969,6 +2109,7 @@ async function init(){
   bindModal();
   bindHeroCta();
   bindThemeToggle();
+  renderMyMusic();
 
   try{
     const info = await fetchJSON(`${API}/api/info`);
@@ -2180,17 +2321,21 @@ function renderDropdown(songs){
           <div class="dropdown-title" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
           <div class="dropdown-artist" title="${esc(s.artists)}">${esc(s.artists)}</div>
         </div>
+        ${starButton(s)}
         ${playLinks(s)}
       </div>
     `;
   }).join('');
   drop.querySelectorAll('.dropdown-item').forEach((el,i)=>{
-    el.addEventListener('click', ()=>{
+    el._songData = songs[i];
+    el.addEventListener('click', e=>{
+      if(e.target.closest('.star-btn')) return;
       drop.classList.remove('show');
       openSong(songs[i]);
     });
   });
   drop.classList.add('show');
+  bindStars(drop);
 }
 
 function renderResults(songs){
@@ -2210,18 +2355,25 @@ function renderResults(songs){
     const st = CLUSTER_STYLES[s.cluster];
     const card = document.createElement('div');
     card.className = 'song-card';
+    card.dataset.id = s.track_id || '';
+    card._songData = s;
     card.innerHTML = `
       <div class="song-icon" style="background:${st.grad}">${st.emoji}</div>
       <div class="song-meta">
         <div class="song-title" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
         <div class="song-artist" title="${esc(s.artists)} · ${esc(s.track_genre)}">${esc(s.artists)} · ${esc(s.track_genre)}</div>
       </div>
+      ${starButton(s)}
       ${playLinks(s)}
       <div class="song-pop">${s.popularity}</div>
     `;
-    card.addEventListener('click', ()=>openSong(s));
+    card.addEventListener('click', e=>{
+      if(e.target.closest('.star-btn,a,button')) return;
+      openSong(s);
+    });
     grid.appendChild(card);
   });
+  bindStars(grid);
 }
 
 /* ============================================================
@@ -2559,6 +2711,7 @@ function closeModal(){
 }
 
 async function openSong(s){
+  addRecent(s);
   const st = CLUSTER_STYLES[s.cluster];
   const hero = document.getElementById('modalHero');
   hero.style.background = st.grad;
@@ -2570,7 +2723,11 @@ async function openSong(s){
   document.getElementById('modalArtist').textContent = s.artists;
   document.getElementById('modalCluster').innerHTML =
     `${st.emoji} K${s.cluster} · ${esc(s.cluster_name || clusterNames[s.cluster] || DEFAULT_NAMES[s.cluster])}`;
-  document.getElementById('modalActions').innerHTML = playLinks(s, 'lg');
+  const actions = document.getElementById('modalActions');
+  actions.innerHTML = starButton(s, 'lg') + playLinks(s, 'lg');
+  actions._songData = s;
+  actions.dataset.id = s.track_id || '';
+  bindStars(actions);
 
   const body = document.getElementById('modalBody');
   body.innerHTML = `
@@ -2631,6 +2788,156 @@ async function openSong(s){
   }catch(e){
     document.getElementById('simLoading').textContent = 'Benzer şarkılar yüklenemedi.';
   }
+}
+
+/* ============================================================
+   MY MUSIC (Favoriler + Son baktıkların · localStorage)
+============================================================ */
+const FAV_KEY = 'mdna_favorites';
+const REC_KEY = 'mdna_recents';
+const REC_CAP = 20;
+const FAV_CAP = 100;
+
+function _loadList(key){
+  try{
+    const raw = localStorage.getItem(key);
+    if(!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  }catch(_){ return []; }
+}
+function _saveList(key, arr){
+  try{ localStorage.setItem(key, JSON.stringify(arr)); }catch(_){}
+}
+function _slim(s){
+  return {
+    track_id: s.track_id,
+    track_name: s.track_name,
+    artists: s.artists,
+    track_genre: s.track_genre,
+    cluster: s.cluster,
+    popularity: s.popularity,
+    cluster_name: s.cluster_name,
+  };
+}
+
+function getFavorites(){ return _loadList(FAV_KEY); }
+function getRecents(){ return _loadList(REC_KEY); }
+function isFavorite(id){
+  return getFavorites().some(x => x.track_id === id);
+}
+function toggleFavorite(s){
+  if(!s || !s.track_id) return false;
+  const favs = getFavorites();
+  const idx = favs.findIndex(x => x.track_id === s.track_id);
+  let nowFav;
+  if(idx >= 0){
+    favs.splice(idx, 1);
+    nowFav = false;
+  }else{
+    favs.unshift(_slim(s));
+    if(favs.length > FAV_CAP) favs.length = FAV_CAP;
+    nowFav = true;
+  }
+  _saveList(FAV_KEY, favs);
+  // Tüm görünür star butonlarını güncelle
+  document.querySelectorAll(`.star-btn[data-fav-id="${CSS.escape(s.track_id)}"]`)
+    .forEach(btn => btn.classList.toggle('is-fav', nowFav));
+  renderMyMusic();
+  return nowFav;
+}
+function addRecent(s){
+  if(!s || !s.track_id) return;
+  const recs = getRecents();
+  const filtered = recs.filter(x => x.track_id !== s.track_id);
+  filtered.unshift(_slim(s));
+  if(filtered.length > REC_CAP) filtered.length = REC_CAP;
+  _saveList(REC_KEY, filtered);
+  renderMyMusic();
+}
+
+const STAR_PATH = '<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>';
+function starButton(s, size){
+  if(!s || !s.track_id) return '';
+  const cls = 'star-btn' + (size === 'lg' ? ' lg' : '') + (isFavorite(s.track_id) ? ' is-fav' : '');
+  return `<button class="${cls}" data-fav-id="${esc(s.track_id)}" title="Favorilere ekle" aria-label="Favorilere ekle">
+    <svg class="star-svg" viewBox="0 0 24 24" aria-hidden="true">${STAR_PATH}</svg>
+  </button>`;
+}
+
+function bindStars(scopeEl){
+  (scopeEl || document).querySelectorAll('.star-btn[data-fav-id]:not([data-bound])').forEach(btn=>{
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', e=>{
+      e.stopPropagation();
+      const id = btn.dataset.favId;
+      // En yakın card'dan veya state'den şarkı objesini bul
+      const card = btn.closest('[data-id]');
+      let song = null;
+      const allLists = [getFavorites(), getRecents()];
+      for(const list of allLists){
+        const found = list.find(x => x.track_id === id);
+        if(found){ song = found; break; }
+      }
+      if(!song && card && card._songData) song = card._songData;
+      if(!song){
+        // Fallback: card'dan title/artist'i oku
+        song = {
+          track_id: id,
+          track_name: card?.querySelector('.similar-name,.dropdown-title,.song-title,.pt-name,.mm-title')?.textContent || id,
+          artists: card?.querySelector('.similar-artist,.dropdown-artist,.song-artist,.pt-artist,.mm-artist')?.textContent || '',
+        };
+      }
+      toggleFavorite(song);
+    });
+  });
+}
+
+function renderMyMusic(){
+  const wrap = document.getElementById('myMusic');
+  if(!wrap) return;
+  const favs = getFavorites();
+  const recs = getRecents();
+  const favBlock = document.getElementById('mmFavorites');
+  const recBlock = document.getElementById('mmRecents');
+  const favRail = document.getElementById('mmFavRail');
+  const recRail = document.getElementById('mmRecRail');
+  const favCount = document.getElementById('mmFavCount');
+  if(!favRail || !recRail) return;
+
+  const buildCard = s => {
+    const st = CLUSTER_STYLES[s.cluster] || {emoji:'🎵', grad:'linear-gradient(135deg,var(--pink),var(--purple))'};
+    return `<div class="mm-card" data-id="${esc(s.track_id)}">
+      ${starButton(s)}
+      <div class="mm-cover" style="background:${st.grad}">${st.emoji}</div>
+      <div class="mm-title" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
+      <div class="mm-artist" title="${esc(s.artists)}">${esc(s.artists)}</div>
+    </div>`;
+  };
+
+  favRail.innerHTML = favs.length
+    ? favs.map(buildCard).join('')
+    : '<div class="mm-empty">Henüz favori yok — şarkı kartlarındaki ⭐ ile ekle.</div>';
+  recRail.innerHTML = recs.length
+    ? recs.map(buildCard).join('')
+    : '';
+
+  favBlock.hidden = false;
+  recBlock.hidden = recs.length === 0;
+  wrap.hidden = (favs.length === 0 && recs.length === 0);
+  favCount.textContent = favs.length;
+
+  // Click → openSong via stored song data
+  wrap.querySelectorAll('.mm-card').forEach(card=>{
+    if(card._bound) return;
+    card._bound = true;
+    const id = card.dataset.id;
+    card.addEventListener('click', e=>{
+      if(e.target.closest('.star-btn')) return;
+      fetchSongAndOpen(id);
+    });
+  });
+  bindStars(wrap);
 }
 
 /* ============================================================
@@ -2715,16 +3022,20 @@ function renderSimilarList(listEl, songs){
         <div class="similar-artist" title="${esc(s.artists)}">${esc(s.artists)}</div>
         ${renderReasons(s.reasons)}
       </div>
+      ${starButton(s)}
       ${playLinks(s)}
       <div class="similar-genre">${esc(s.track_genre)}</div>
       <div class="similar-match">${s.match_percent}%</div>
     </div>
   `).join('');
-  listEl.querySelectorAll('.similar-row').forEach(el=>{
-    el.addEventListener('click', ()=>{
+  listEl.querySelectorAll('.similar-row').forEach((el,i)=>{
+    el._songData = songs[i];
+    el.addEventListener('click', e=>{
+      if(e.target.closest('.star-btn,a,button')) return;
       if(el.dataset.id) fetchSongAndOpen(el.dataset.id);
     });
   });
+  bindStars(listEl);
 }
 
 function renderPlaylist(host, songs, title){
@@ -2777,6 +3088,7 @@ function renderPlaylist(host, songs, title){
               <div class="pt-name" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
               <div class="pt-artist" title="${esc(s.artists)}${s.track_genre?` · ${esc(s.track_genre)}`:''}">${esc(s.artists)}${s.track_genre?` · ${esc(s.track_genre)}`:''}</div>
             </div>
+            ${starButton(s)}
             ${playLinks(s)}
             <div class="pt-match">${s.match_percent}%</div>
           </div>
