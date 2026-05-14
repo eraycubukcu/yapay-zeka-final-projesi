@@ -1547,6 +1547,306 @@ input:focus-visible,
 .swatch-user{background:var(--pink)}
 .swatch-mean{background:rgba(255,255,255,.4)}
 
+/* Compare radar polygons */
+.radar-a{
+  fill:rgba(255,79,139,.22);
+  stroke:#FF4F8B;stroke-width:2.5;
+}
+.radar-a-dot{fill:#FF4F8B}
+.radar-b{
+  fill:rgba(43,179,255,.22);
+  stroke:#2BB3FF;stroke-width:2.5;
+}
+.radar-b-dot{fill:#2BB3FF}
+.swatch-a{background:var(--pink)}
+.swatch-b{background:var(--blue)}
+
+/* Compare mode UI */
+.btn-compare{
+  padding:10px 18px;border-radius:100px;
+  font-size:11px;font-weight:800;letter-spacing:.18em;
+  text-transform:uppercase;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  color:var(--txt);
+  transition:all .2s;
+  white-space:nowrap;
+}
+.btn-compare:hover{
+  background:linear-gradient(135deg,var(--pink),var(--blue));
+  border-color:transparent;color:#fff;transform:translateY(-2px);
+}
+[data-theme="light"] .btn-compare{
+  background:#fff;border:1px solid var(--ln-strong);color:var(--txt);
+  box-shadow:var(--shadow-sm);
+}
+[data-theme="light"] .btn-compare:hover{
+  background:linear-gradient(135deg,var(--pink),var(--blue));
+  color:#fff;border-color:transparent;
+}
+
+.compare-strip{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  gap:14px;align-items:center;
+  padding:18px;margin-bottom:24px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+}
+[data-theme="light"] .compare-strip{
+  background:#fff;border:1px solid var(--ln);
+  box-shadow:var(--shadow-sm);
+}
+.compare-chip{
+  display:flex;align-items:center;gap:12px;
+  padding:10px;border-radius:14px;
+  background:rgba(0,0,0,.2);
+  border:2px solid transparent;
+  min-width:0;
+}
+.compare-chip.slot-a{border-color:rgba(255,79,139,.5)}
+.compare-chip.slot-b{border-color:rgba(43,179,255,.5)}
+.compare-chip.empty{
+  border-style:dashed;border-color:rgba(255,255,255,.2);
+  background:rgba(255,255,255,.02);
+}
+[data-theme="light"] .compare-chip{background:#fafafa}
+[data-theme="light"] .compare-chip.empty{background:#fff;border-color:var(--ln-strong)}
+.compare-chip-icon{
+  width:48px;height:48px;border-radius:10px;
+  background:var(--grad,linear-gradient(135deg,var(--pink),var(--purple)));
+  display:grid;place-items:center;font-size:22px;color:#fff;flex-shrink:0;
+}
+.compare-chip-meta{min-width:0;flex:1}
+.compare-chip-eyebrow{
+  font-size:10px;font-weight:800;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--txt-dim);
+  margin-bottom:4px;
+}
+.slot-a .compare-chip-eyebrow{color:var(--pink)}
+.slot-b .compare-chip-eyebrow{color:var(--blue)}
+.compare-chip-name{
+  font-size:14px;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.compare-chip-artist{
+  font-size:12px;color:var(--txt-dim);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.compare-chip-swap{
+  font-size:10px;color:var(--txt-dim);
+  text-transform:uppercase;letter-spacing:.15em;
+  padding:6px 10px;border-radius:100px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  white-space:nowrap;flex-shrink:0;
+  transition:all .2s;
+}
+.compare-chip-swap:hover{background:rgba(255,255,255,.12);color:var(--txt)}
+.compare-vs{
+  font-family:var(--display);
+  font-size:24px;
+  background:linear-gradient(135deg,var(--pink),var(--blue));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.compare-pick{
+  display:flex;flex-direction:column;gap:8px;
+  width:100%;
+}
+.compare-pick-input{
+  width:100%;
+  padding:11px 14px;border-radius:10px;
+  font-size:14px;
+  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.12);
+}
+.compare-pick-input:focus{border-color:var(--blue);outline:none}
+[data-theme="light"] .compare-pick-input{
+  background:#fff;border:1px solid var(--ln-strong);
+}
+.compare-pick-results{
+  max-height:240px;overflow-y:auto;
+  background:rgba(0,0,0,.25);border-radius:10px;
+  display:none;
+}
+.compare-pick-results.show{display:block}
+[data-theme="light"] .compare-pick-results{background:#fff;border:1px solid var(--ln)}
+.compare-pick-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;cursor:pointer;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  transition:background .15s;
+}
+.compare-pick-item:last-child{border-bottom:none}
+.compare-pick-item:hover{background:rgba(43,179,255,.1)}
+.compare-pick-icon{
+  width:32px;height:32px;border-radius:8px;
+  display:grid;place-items:center;font-size:14px;flex-shrink:0;
+  background:var(--grad,linear-gradient(135deg,var(--pink),var(--purple)));color:#fff;
+}
+.compare-pick-meta{flex:1;min-width:0;font-size:13px}
+.compare-pick-meta b{
+  display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.compare-pick-meta span{
+  color:var(--txt-dim);font-size:11px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;
+}
+.compare-exit{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:100px;
+  font-size:11px;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:var(--txt-dim);
+  transition:all .2s;
+  margin-bottom:20px;
+}
+.compare-exit:hover{background:rgba(255,255,255,.12);color:var(--txt)}
+[data-theme="light"] .compare-exit{
+  background:#fff;border:1px solid var(--ln-strong);
+  box-shadow:var(--shadow-sm);
+}
+
+/* Similarity gauge */
+.similarity-card{
+  display:grid;grid-template-columns:auto 1fr;gap:24px;
+  align-items:center;
+  padding:24px;
+  background:linear-gradient(135deg,rgba(255,79,139,.08),rgba(43,179,255,.08));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  margin-bottom:24px;
+}
+[data-theme="light"] .similarity-card{
+  background:linear-gradient(135deg,rgba(255,79,139,.06),rgba(43,179,255,.06),#fff);
+  border:1px solid var(--ln);box-shadow:var(--shadow-sm);
+}
+.similarity-gauge{
+  --p:0;
+  width:120px;height:120px;border-radius:50%;
+  background:conic-gradient(
+    from -90deg,
+    var(--mint) 0% calc(var(--p) * 1%),
+    rgba(255,255,255,.08) calc(var(--p) * 1%) 100%
+  );
+  display:grid;place-items:center;position:relative;
+  flex-shrink:0;
+}
+[data-theme="light"] .similarity-gauge{
+  background:conic-gradient(
+    from -90deg,
+    var(--mint) 0% calc(var(--p) * 1%),
+    rgba(15,15,18,.06) calc(var(--p) * 1%) 100%
+  );
+}
+.similarity-gauge::before{
+  content:'';position:absolute;inset:10px;
+  background:var(--bg);border-radius:50%;
+}
+.similarity-gauge .gauge-val{
+  position:relative;z-index:1;
+  font-family:var(--display);
+  font-size:32px;line-height:1;
+  background:linear-gradient(135deg,var(--mint),var(--green));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.similarity-gauge .gauge-pct{
+  position:relative;z-index:1;
+  margin-top:2px;
+  font-size:10px;font-weight:800;letter-spacing:.2em;color:var(--txt-dim);
+}
+.similarity-info-eyebrow{
+  font-size:11px;font-weight:800;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--mint);
+  margin-bottom:8px;
+}
+.similarity-info h4{
+  font-family:var(--display);
+  font-size:clamp(22px,3vw,32px);
+  line-height:1;margin-bottom:8px;
+  text-transform:uppercase;
+}
+.similarity-info p{font-size:14px;color:var(--txt-dim);line-height:1.5}
+
+.compare-radar-wrap{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+  align-items:center;
+  padding:24px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:20px;
+  margin-bottom:24px;
+}
+[data-theme="light"] .compare-radar-wrap{
+  background:#fff;border:1px solid var(--ln);box-shadow:var(--shadow-sm);
+}
+
+.delta-bars{
+  display:flex;flex-direction:column;gap:14px;
+  padding:24px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:20px;
+}
+[data-theme="light"] .delta-bars{
+  background:#fff;border:1px solid var(--ln);box-shadow:var(--shadow-sm);
+}
+.delta-row{
+  display:grid;grid-template-columns:120px 1fr 64px;
+  align-items:center;gap:14px;
+}
+.delta-label{
+  font-size:12px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--txt-dim);
+}
+.delta-track{
+  position:relative;height:24px;
+  background:rgba(255,255,255,.05);border-radius:12px;
+  overflow:hidden;
+}
+[data-theme="light"] .delta-track{background:rgba(15,15,18,.05)}
+.delta-bar-a, .delta-bar-b{
+  position:absolute;top:0;height:100%;
+  border-radius:12px;
+  display:flex;align-items:center;
+  font-size:10px;font-weight:800;color:#fff;
+  padding:0 8px;
+  transition:width .6s cubic-bezier(.22,1,.36,1);
+}
+.delta-bar-a{
+  background:linear-gradient(90deg,rgba(255,79,139,.6),var(--pink));
+  left:0;
+}
+.delta-bar-b{
+  background:linear-gradient(90deg,rgba(43,179,255,.6),var(--blue));
+  right:0;
+  flex-direction:row-reverse;
+}
+.delta-bar-a.aligned{
+  background:linear-gradient(90deg,rgba(117,255,180,.6),var(--mint));
+}
+.delta-bar-b.aligned{
+  background:linear-gradient(90deg,rgba(117,255,180,.6),var(--mint));
+}
+.delta-pct{
+  font-family:var(--display);
+  font-size:16px;text-align:right;
+  color:var(--txt);
+}
+
+@media (max-width:720px){
+  .compare-strip{grid-template-columns:1fr;gap:10px;padding:14px}
+  .compare-vs{justify-self:center}
+  .compare-radar-wrap{grid-template-columns:1fr;gap:16px;padding:18px}
+  .similarity-card{grid-template-columns:1fr;text-align:center;padding:18px}
+  .similarity-gauge{margin:0 auto}
+  .delta-row{grid-template-columns:90px 1fr 52px;gap:10px}
+  .delta-label{font-size:11px;letter-spacing:.05em}
+  .delta-bar-a, .delta-bar-b{font-size:9px;padding:0 6px}
+}
+
 /* ============================================================
    LIGHT THEME (soft & colorful)
 ============================================================ */
@@ -2863,6 +3163,265 @@ function buildRadar(values, cid){
 }
 
 /* ============================================================
+   COMPARE TWO SONGS
+============================================================ */
+let _compareState = null;  // {a, b}
+let _compareSearchTimer = null;
+
+function enterCompareMode(songA){
+  _compareState = {a: songA, b: null};
+  renderCompareView();
+}
+
+function renderCompareView(){
+  const body = document.getElementById('modalBody');
+  if(!body || !_compareState) return;
+  const {a, b} = _compareState;
+
+  body.innerHTML = `
+    <button class="compare-exit" type="button">← Karşılaştırmadan çık</button>
+    <div class="compare-strip">
+      ${renderCompareChip(a, 'a')}
+      <div class="compare-vs">VS</div>
+      ${b ? renderCompareChip(b, 'b') : renderComparePicker()}
+    </div>
+    <div id="compareResult"></div>
+  `;
+  body.querySelector('.compare-exit').addEventListener('click', exitCompareMode);
+
+  body.querySelectorAll('.compare-chip-swap').forEach(btn => {
+    btn.addEventListener('click', ()=>{
+      const slot = btn.dataset.slot;
+      if(slot === 'a'){
+        exitCompareMode();
+        return;
+      }
+      _compareState.b = null;
+      renderCompareView();
+    });
+  });
+
+  const input = body.querySelector('.compare-pick-input');
+  if(input){
+    input.focus();
+    const results = body.querySelector('.compare-pick-results');
+    input.addEventListener('input', e=>{
+      const q = e.target.value.trim();
+      clearTimeout(_compareSearchTimer);
+      if(q.length < 2){ results.classList.remove('show'); results.innerHTML=''; return; }
+      _compareSearchTimer = setTimeout(()=>doCompareSearch(q, results), 280);
+    });
+  }
+
+  if(a && b){
+    renderCompareResult(a, b);
+  }
+}
+
+function renderCompareChip(s, slot){
+  const st = CLUSTER_STYLES[s.cluster] || {emoji:'🎵', grad:'linear-gradient(135deg,var(--pink),var(--purple))'};
+  return `
+    <div class="compare-chip slot-${slot}">
+      <div class="compare-chip-icon" style="background:${st.grad}">${st.emoji}</div>
+      <div class="compare-chip-meta">
+        <div class="compare-chip-eyebrow">${slot === 'a' ? 'Şarkı 1' : 'Şarkı 2'}</div>
+        <div class="compare-chip-name" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
+        <div class="compare-chip-artist" title="${esc(s.artists)}">${esc(s.artists)}</div>
+      </div>
+      <button class="compare-chip-swap" type="button" data-slot="${slot}">${slot === 'a' ? 'Çık' : 'Değiştir'}</button>
+    </div>
+  `;
+}
+
+function renderComparePicker(){
+  return `
+    <div class="compare-chip slot-b empty">
+      <div class="compare-pick">
+        <div class="compare-chip-eyebrow" style="color:var(--blue)">Şarkı 2 · seç</div>
+        <input type="text" class="compare-pick-input" placeholder="Şarkı veya sanatçı yaz…" autocomplete="off">
+        <div class="compare-pick-results"></div>
+      </div>
+    </div>
+  `;
+}
+
+async function doCompareSearch(q, resultsEl){
+  try{
+    const data = await fetchJSON(`${API}/api/search?q=${encodeURIComponent(q)}`);
+    const hits = (data.results || [])
+      .filter(s => s.track_id !== (_compareState?.a?.track_id))
+      .slice(0, 8);
+    if(!hits.length){
+      resultsEl.innerHTML = '<div class="compare-pick-item" style="cursor:default;color:var(--txt-dim)">Sonuç yok</div>';
+      resultsEl.classList.add('show');
+      return;
+    }
+    resultsEl.innerHTML = hits.map(s=>{
+      const st = CLUSTER_STYLES[s.cluster];
+      return `
+        <div class="compare-pick-item" data-id="${s.track_id}">
+          <div class="compare-pick-icon" style="background:${st.grad}">${st.emoji}</div>
+          <div class="compare-pick-meta">
+            <b title="${esc(s.track_name)}">${esc(s.track_name)}</b>
+            <span title="${esc(s.artists)}">${esc(s.artists)}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+    resultsEl.classList.add('show');
+    resultsEl.querySelectorAll('.compare-pick-item').forEach((el,i)=>{
+      el.addEventListener('click', ()=>{
+        _compareState.b = hits[i];
+        renderCompareView();
+      });
+    });
+  }catch(_){
+    toast('Arama başarısız', 'error');
+  }
+}
+
+function exitCompareMode(){
+  const a = _compareState?.a;
+  _compareState = null;
+  if(a) openSong(a);
+}
+
+function computeSimilarity(a, b){
+  let sum = 0, n = 0;
+  for(const k of RADAR_KEYS){
+    const va = parseFloat(a[k]);
+    const vb = parseFloat(b[k]);
+    if(isFinite(va) && isFinite(vb)){
+      sum += (va - vb) * (va - vb);
+      n++;
+    }
+  }
+  if(!n) return 0;
+  const d = Math.sqrt(sum / n);
+  return Math.max(0, Math.min(100, Math.round((1 - d) * 100)));
+}
+
+function similarityVerdict(score){
+  if(score >= 90) return {eyebrow:'Neredeyse aynı', text:'İki şarkının DNA\'sı çok benzer — aynı küme atmosferinde nefes alıyorlar.'};
+  if(score >= 75) return {eyebrow:'Akrabaymış gibi', text:'Çok yakın profil — tempo, enerji ve duygu büyük ölçüde örtüşüyor.'};
+  if(score >= 55) return {eyebrow:'Aynı sokakta', text:'Bazı özellikler örtüşse de karakterleri farklı yönlere sapıyor.'};
+  if(score >= 35) return {eyebrow:'Uzak akraba', text:'Birkaç ortak nokta var ama ses parmak izleri belirgin biçimde farklı.'};
+  return {eyebrow:'Tamamen farklı', text:'İki ayrı evren — DNA\'ları örtüşmüyor, farklı kümelerden geliyorlar.'};
+}
+
+function buildCompareRadar(a, b){
+  const cx=200, cy=200, r=130;
+  const n = RADAR_KEYS.length;
+  let grid = '';
+  for(let k=1;k<=4;k++){
+    const rr = r*k/4;
+    const pts = RADAR_KEYS.map((_,i)=>{
+      const ang = -Math.PI/2 + i*2*Math.PI/n;
+      return `${cx+Math.cos(ang)*rr},${cy+Math.sin(ang)*rr}`;
+    }).join(' ');
+    grid += `<polygon class="radar-grid" points="${pts}" fill="none"/>`;
+  }
+  RADAR_KEYS.forEach((_,i)=>{
+    const ang = -Math.PI/2 + i*2*Math.PI/n;
+    grid += `<line class="radar-axis" x1="${cx}" y1="${cy}" x2="${cx+Math.cos(ang)*r}" y2="${cy+Math.sin(ang)*r}"/>`;
+  });
+  const polyPts = song => RADAR_KEYS.map((k,i)=>{
+    const ang = -Math.PI/2 + i*2*Math.PI/n;
+    const v = Math.max(0, Math.min(1, parseFloat(song[k]) || 0));
+    return `${cx+Math.cos(ang)*r*v},${cy+Math.sin(ang)*r*v}`;
+  }).join(' ');
+  const aPts = polyPts(a);
+  const bPts = polyPts(b);
+  const dotsFor = song => RADAR_KEYS.map((k,i)=>{
+    const ang = -Math.PI/2 + i*2*Math.PI/n;
+    const v = Math.max(0, Math.min(1, parseFloat(song[k]) || 0));
+    return {x: cx+Math.cos(ang)*r*v, y: cy+Math.sin(ang)*r*v};
+  });
+  const aDots = dotsFor(a).map(p => `<circle class="radar-a-dot" cx="${p.x}" cy="${p.y}" r="3.5"/>`).join('');
+  const bDots = dotsFor(b).map(p => `<circle class="radar-b-dot" cx="${p.x}" cy="${p.y}" r="3.5"/>`).join('');
+  let labels = '';
+  RADAR_KEYS.forEach((k,i)=>{
+    const ang = -Math.PI/2 + i*2*Math.PI/n;
+    const lx = cx+Math.cos(ang)*(r+24);
+    const ly = cy+Math.sin(ang)*(r+24);
+    labels += `<text class="radar-label" x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle">${RADAR_LABELS[k]}</text>`;
+  });
+  return `
+    <svg class="radar-svg" viewBox="0 0 400 400">
+      ${grid}
+      <polygon class="radar-a" points="${aPts}"/>
+      <polygon class="radar-b" points="${bPts}"/>
+      ${aDots}${bDots}
+      ${labels}
+    </svg>
+  `;
+}
+
+function renderCompareResult(a, b){
+  const host = document.getElementById('compareResult');
+  if(!host) return;
+  const score = computeSimilarity(a, b);
+  const v = similarityVerdict(score);
+
+  const deltaRows = RADAR_KEYS.map(k=>{
+    const va = Math.max(0, Math.min(1, parseFloat(a[k]) || 0));
+    const vb = Math.max(0, Math.min(1, parseFloat(b[k]) || 0));
+    const aligned = Math.abs(va - vb) < 0.08;
+    return `
+      <div class="delta-row">
+        <div class="delta-label">${RADAR_LABELS[k]}</div>
+        <div class="delta-track">
+          <div class="delta-bar-a ${aligned?'aligned':''}" style="width:${(va*50).toFixed(1)}%">${Math.round(va*100)}%</div>
+          <div class="delta-bar-b ${aligned?'aligned':''}" style="width:${(vb*50).toFixed(1)}%">${Math.round(vb*100)}%</div>
+        </div>
+        <div class="delta-pct">${Math.abs(va-vb) < 0.05 ? '≈' : (va>vb?'▲':'▼')} ${Math.round(Math.abs(va-vb)*100)}</div>
+      </div>
+    `;
+  }).join('');
+
+  const sameCluster = a.cluster === b.cluster;
+  const clusterInfo = sameCluster
+    ? `Aynı kümede: <b>K${a.cluster} · ${esc(clusterNames[a.cluster] || DEFAULT_NAMES[a.cluster])}</b>`
+    : `Farklı kümeler: <b>K${a.cluster} ↔ K${b.cluster}</b>`;
+
+  host.innerHTML = `
+    <div class="similarity-card">
+      <div class="similarity-gauge" style="--p:${score}">
+        <div>
+          <div class="gauge-val">${score}</div>
+          <div class="gauge-pct">% BENZER</div>
+        </div>
+      </div>
+      <div class="similarity-info">
+        <div class="similarity-info-eyebrow">${esc(v.eyebrow)}</div>
+        <h4>DNA<br>EŞLEŞMESİ</h4>
+        <p>${esc(v.text)}</p>
+        <p style="margin-top:8px;font-size:12px">${clusterInfo}</p>
+      </div>
+    </div>
+
+    <div class="compare-radar-wrap">
+      <div>${buildCompareRadar(a, b)}</div>
+      <div>
+        <div class="section-eyebrow" style="color:var(--mint)">Akustik DNA · Üst Üste</div>
+        <h3 style="font-family:var(--display);font-size:28px;line-height:1;margin:8px 0 16px">İKİ ŞARKI<br>TEK GRAFİK</h3>
+        <div class="radar-legend">
+          <div class="legend-row"><span class="legend-swatch swatch-a"></span> ${esc(a.track_name)}</div>
+          <div class="legend-row"><span class="legend-swatch swatch-b"></span> ${esc(b.track_name)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="delta-bars">
+      <div style="font-size:11px;font-weight:800;letter-spacing:.25em;text-transform:uppercase;color:var(--txt-dim);margin-bottom:6px">
+        Özellik özellik
+      </div>
+      ${deltaRows}
+    </div>
+  `;
+}
+
+/* ============================================================
    CONFETTI
 ============================================================ */
 function fireConfetti(){
@@ -2898,6 +3457,7 @@ function bindModal(){
 }
 function closeModal(){
   document.getElementById('modal').classList.remove('show');
+  _compareState = null;
 }
 
 async function openSong(s){
@@ -2914,10 +3474,15 @@ async function openSong(s){
   document.getElementById('modalCluster').innerHTML =
     `${st.emoji} K${s.cluster} · ${esc(s.cluster_name || clusterNames[s.cluster] || DEFAULT_NAMES[s.cluster])}`;
   const actions = document.getElementById('modalActions');
-  actions.innerHTML = starButton(s, 'lg') + playLinks(s, 'lg');
+  actions.innerHTML = starButton(s, 'lg') + playLinks(s, 'lg') +
+    `<button class="btn-compare" type="button" title="Başka bir şarkıyla karşılaştır">🔀 Karşılaştır</button>`;
   actions._songData = s;
   actions.dataset.id = s.track_id || '';
   bindStars(actions);
+  actions.querySelector('.btn-compare').addEventListener('click', e=>{
+    e.stopPropagation();
+    enterCompareMode(s);
+  });
 
   const body = document.getElementById('modalBody');
   body.innerHTML = `
