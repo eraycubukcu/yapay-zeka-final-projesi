@@ -316,6 +316,75 @@ def api_cluster(cluster_id):
     })
 
 
+@app.route('/api/cluster/<int:cluster_id>/top', methods=['GET'])
+def api_cluster_top(cluster_id):
+    """
+    🌟 KÜME PROFİLİ
+    Bir kümenin en popüler şarkılarını, en sık görülen sanatçılarını
+    ve en yaygın türlerini döner. DNA sonuç sayfasında 'bu kümeyi tanı'
+    bölümü için.
+    """
+    if cluster_id not in cluster_names:
+        return jsonify({'error': 'Geçersiz küme'}), 404
+
+    songs_n = max(1, min(50, int(request.args.get('songs', 12))))
+    artists_n = max(1, min(30, int(request.args.get('artists', 8))))
+    genres_n = max(1, min(20, int(request.args.get('genres', 6))))
+
+    cs = df[df['cluster'] == cluster_id]
+    total = len(cs)
+
+    # Top songs by popularity
+    top_songs_df = cs.nlargest(songs_n, 'popularity')
+    top_songs = []
+    for _, row in top_songs_df.iterrows():
+        top_songs.append({
+            'track_id': row['track_id'],
+            'track_name': str(row['track_name']),
+            'artists': str(row['artists']),
+            'track_genre': str(row['track_genre']),
+            'popularity': int(row['popularity']),
+            'cluster': int(row['cluster']),
+        })
+
+    # Top artists: split multi-artist strings on ';' or ','
+    # then count occurrences; rank by count, break ties by max popularity
+    artist_count = {}
+    artist_pop_sum = {}
+    for _, row in cs.iterrows():
+        raw = str(row['artists'])
+        # split common delimiters
+        parts = [p.strip() for p in raw.replace(';', ',').split(',') if p.strip()]
+        if not parts:
+            continue
+        pop = int(row['popularity'])
+        for a in parts:
+            artist_count[a] = artist_count.get(a, 0) + 1
+            artist_pop_sum[a] = artist_pop_sum.get(a, 0) + pop
+    sorted_artists = sorted(
+        artist_count.items(),
+        key=lambda kv: (-kv[1], -(artist_pop_sum[kv[0]] / kv[1]))
+    )[:artists_n]
+    top_artists = [{
+        'name': name,
+        'count': int(cnt),
+        'avg_popularity': round(artist_pop_sum[name] / cnt, 1),
+    } for name, cnt in sorted_artists]
+
+    # Top genres
+    genre_count = cs['track_genre'].value_counts().head(genres_n)
+    top_genres = [{'name': str(g), 'count': int(n)} for g, n in genre_count.items()]
+
+    return jsonify({
+        'cluster': cluster_id,
+        'cluster_name': cluster_names[cluster_id],
+        'total': int(total),
+        'top_songs': top_songs,
+        'top_artists': top_artists,
+        'top_genres': top_genres,
+    })
+
+
 @app.route('/api/song/<track_id>', methods=['GET'])
 def api_song(track_id):
     """

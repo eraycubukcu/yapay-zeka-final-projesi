@@ -1175,6 +1175,141 @@ input:focus-visible,
   .mm-cover{font-size:28px}
 }
 
+/* Cluster spotlight (result page · 'Bu kümeyi tanı') */
+.cluster-top{
+  margin-top:40px;
+  padding:32px;
+  background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01) 60%,rgba(0,0,0,0));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:24px;
+}
+[data-theme="light"] .cluster-top{
+  background:linear-gradient(160deg,rgba(110,43,255,.04),rgba(255,79,139,.03) 60%,#fff);
+  border:1px solid var(--ln);
+  box-shadow:var(--shadow-md);
+}
+.ct-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;
+  margin-bottom:28px;
+}
+.ct-eyebrow{
+  font-size:11px;font-weight:800;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--mint);
+}
+.ct-title{
+  font-family:var(--display);
+  font-size:clamp(28px,4vw,42px);
+  letter-spacing:-.01em;line-height:1;
+  margin-top:6px;
+}
+.ct-total{
+  font-size:13px;color:var(--txt-dim);letter-spacing:.05em;
+}
+.ct-total b{color:var(--txt);font-weight:700}
+.ct-section{margin-bottom:28px}
+.ct-section:last-child{margin-bottom:0}
+.ct-section-head{
+  font-size:11px;font-weight:800;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--txt-dim);
+  margin-bottom:12px;
+}
+
+.ct-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ct-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:100px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  font-size:13px;font-weight:600;
+  transition:all .2s;
+}
+.ct-chip:hover{
+  background:rgba(255,79,139,.12);
+  border-color:var(--pink);
+  transform:translateY(-1px);
+}
+.ct-chip-count{
+  display:inline-grid;place-items:center;
+  min-width:22px;height:20px;padding:0 6px;border-radius:100px;
+  font-size:11px;font-weight:700;
+  background:rgba(255,255,255,.1);
+  color:var(--txt-dim);
+}
+.ct-chip:hover .ct-chip-count{background:rgba(255,255,255,.2);color:var(--txt)}
+[data-theme="light"] .ct-chip{
+  background:#fff;border:1px solid var(--ln-strong);color:var(--txt);
+  box-shadow:var(--shadow-sm);
+}
+[data-theme="light"] .ct-chip:hover{
+  border-color:var(--pink);background:rgba(255,79,139,.06);
+}
+[data-theme="light"] .ct-chip-count{background:rgba(15,15,18,.06)}
+
+.ct-genres{display:flex;flex-wrap:wrap;gap:6px}
+.ct-genre{
+  padding:6px 12px;border-radius:8px;
+  font-size:11px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;
+  background:rgba(43,179,255,.1);
+  border:1px solid rgba(43,179,255,.25);
+  color:var(--blue);
+}
+[data-theme="light"] .ct-genre{
+  background:rgba(43,179,255,.08);
+  border:1px solid rgba(43,179,255,.25);
+  color:var(--blue);
+}
+
+.ct-tracks{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:10px;
+}
+.ct-track{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.ct-track:hover{
+  background:rgba(255,255,255,.06);
+  transform:translateX(3px);
+}
+[data-theme="light"] .ct-track{
+  background:#fff;border:1px solid var(--ln);box-shadow:var(--shadow-sm);
+}
+[data-theme="light"] .ct-track:hover{background:#fafafa;box-shadow:var(--shadow-md)}
+.ct-track-icon{
+  width:36px;height:36px;border-radius:8px;
+  background:var(--grad,linear-gradient(135deg,var(--pink),var(--purple)));
+  display:grid;place-items:center;
+  font-size:16px;color:#fff;flex-shrink:0;
+}
+.ct-track-meta{flex:1;min-width:0}
+.ct-track-name{
+  font-size:13px;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.ct-track-artist{
+  font-size:11px;color:var(--txt-dim);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-top:2px;
+}
+.ct-track-pop{
+  font-family:var(--display);
+  font-size:14px;color:var(--yellow);
+  flex-shrink:0;
+}
+[data-theme="light"] .ct-track-pop{color:var(--orange)}
+
+@media (max-width:520px){
+  .cluster-top{padding:20px 18px}
+}
+
 /* Favorites page */
 .favorites-stats{
   display:flex;flex-wrap:wrap;gap:10px;
@@ -3059,6 +3194,7 @@ function renderResult(pred, sim, values){
     ${buildCountPicker(sim.songs.length, `K${cid} · ${esc(pred.svm_name)} Mix`)}
     <div class="similar-grid" id="resultSimilar"></div>
     <div id="resultPlaylist"></div>
+    <div id="resultClusterTop"></div>
   `;
   bindSimilarSection(wrap, sim.songs, {
     listId:'resultSimilar',
@@ -3066,6 +3202,8 @@ function renderResult(pred, sim, values){
     countLabelSel:'.similar-count',
     title:`K${cid} · ${pred.svm_name} Mix`
   });
+
+  loadClusterTop(cid, document.getElementById('resultClusterTop'));
 
   wrap.classList.add('show');
   setTimeout(()=>wrap.scrollIntoView({behavior:'smooth',block:'start'}), 100);
@@ -3160,6 +3298,98 @@ function buildRadar(values, cid){
       ${labels}
     </svg>
   `;
+}
+
+/* ============================================================
+   CLUSTER TOP (artists · songs · genres)
+============================================================ */
+const _clusterTopCache = new Map();
+
+async function loadClusterTop(cid, host){
+  if(!host) return;
+  host.innerHTML = `
+    <div class="cluster-top">
+      <div class="ct-head">
+        <div>
+          <div class="ct-eyebrow">Bu kümeyi tanı</div>
+          <div class="ct-title">K${cid} · ${esc(clusterNames[cid] || DEFAULT_NAMES[cid])}</div>
+        </div>
+      </div>
+      ${skeletonRows(3)}
+    </div>
+  `;
+
+  let data;
+  try{
+    if(_clusterTopCache.has(cid)){
+      data = _clusterTopCache.get(cid);
+    }else{
+      data = await fetchJSON(`${API}/api/cluster/${cid}/top?songs=12&artists=8&genres=6`);
+      _clusterTopCache.set(cid, data);
+    }
+  }catch(_){
+    host.innerHTML = '';
+    return;
+  }
+
+  const st = CLUSTER_STYLES[cid] || {grad:'linear-gradient(135deg,var(--pink),var(--purple))', emoji:'🎵'};
+  host.innerHTML = `
+    <div class="cluster-top">
+      <div class="ct-head">
+        <div>
+          <div class="ct-eyebrow">Bu kümeyi tanı</div>
+          <div class="ct-title">K${cid} · ${esc(data.cluster_name)}</div>
+        </div>
+        <div class="ct-total">Toplam <b>${(data.total||0).toLocaleString('tr-TR')}</b> şarkı bu kümede</div>
+      </div>
+
+      ${data.top_artists?.length ? `
+        <div class="ct-section">
+          <div class="ct-section-head">Sık görülen sanatçılar</div>
+          <div class="ct-chips">
+            ${data.top_artists.map(a => `
+              <span class="ct-chip">
+                ${esc(a.name)}
+                <span class="ct-chip-count">${a.count}</span>
+              </span>
+            `).join('')}
+          </div>
+        </div>` : ''}
+
+      ${data.top_genres?.length ? `
+        <div class="ct-section">
+          <div class="ct-section-head">Yaygın türler</div>
+          <div class="ct-genres">
+            ${data.top_genres.map(g => `<span class="ct-genre">${esc(g.name)} · ${g.count}</span>`).join('')}
+          </div>
+        </div>` : ''}
+
+      ${data.top_songs?.length ? `
+        <div class="ct-section">
+          <div class="ct-section-head">Popüler şarkılar</div>
+          <div class="ct-tracks"></div>
+        </div>` : ''}
+    </div>
+  `;
+
+  const tracksEl = host.querySelector('.ct-tracks');
+  if(tracksEl && data.top_songs){
+    data.top_songs.forEach(t => {
+      const el = document.createElement('div');
+      el.className = 'ct-track';
+      el.dataset.id = t.track_id;
+      el.innerHTML = `
+        <div class="ct-track-icon" style="background:${st.grad}">${st.emoji}</div>
+        <div class="ct-track-meta">
+          <div class="ct-track-name" title="${esc(t.track_name)}">${esc(t.track_name)}</div>
+          <div class="ct-track-artist" title="${esc(t.artists)}">${esc(t.artists)}</div>
+        </div>
+        <div class="ct-track-pop">${t.popularity}</div>
+      `;
+      el.addEventListener('click', ()=> fetchSongAndOpen(t.track_id));
+      tracksEl.appendChild(el);
+    });
+  }
 }
 
 /* ============================================================
