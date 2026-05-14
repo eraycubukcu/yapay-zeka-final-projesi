@@ -2698,11 +2698,11 @@ const YOUTUBE_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="t
 
 function playLinks(s, size){
   const cls = size === 'lg' ? 'play-links lg' : 'play-links';
-  const spotifyUrl = s.track_id ? `https://open.spotify.com/track/${encodeURIComponent(s.track_id)}` : '';
+  const spotifyUri = s.track_id ? `spotify:track:${s.track_id}` : '';
   const ytQuery = encodeURIComponent(`${s.artists || ''} ${s.track_name || ''}`.trim());
   const youtubeUrl = `https://www.youtube.com/results?search_query=${ytQuery}`;
-  const spotify = spotifyUrl
-    ? `<a class="play-icon spotify" href="${spotifyUrl}" target="_blank" rel="noopener noreferrer" title="Spotify'da aç" onclick="event.stopPropagation()">${SPOTIFY_SVG}</a>`
+  const spotify = spotifyUri
+    ? `<a class="play-icon spotify" href="${spotifyUri}" title="Spotify uygulamasında aç" onclick="event.stopPropagation()">${SPOTIFY_SVG}</a>`
     : '';
   const youtube = `<a class="play-icon youtube" href="${youtubeUrl}" target="_blank" rel="noopener noreferrer" title="YouTube'da ara" onclick="event.stopPropagation()">${YOUTUBE_SVG}</a>`;
   return `<span class="${cls}">${spotify}${youtube}</span>`;
