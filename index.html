@@ -40,10 +40,30 @@ body{
   padding-top:70px;
 }
 @media (max-width:720px){body{padding-top:60px}}
+html{scroll-behavior:smooth}
+:where(section,.result,.playlist-panel,#resultSimilar,.page){scroll-margin-top:84px}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input{font-family:inherit;color:inherit;border:none;outline:none;background:none}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--pink);color:#000}
+
+/* Keyboard focus — visible only when navigating via keyboard */
+:focus{outline:none}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible,
+.brand[data-goto]:focus-visible{
+  outline:2px solid var(--mint);
+  outline-offset:3px;
+  border-radius:8px;
+}
+.nav-tab:focus-visible,
+.btn-playlist:focus-visible,
+.btn-spotify-open:focus-visible{outline-offset:4px}
+.search-input:focus-visible,
+.slider-input:focus-visible,
+.count-slider:focus-visible{outline-offset:6px}
 
 /* ============================================================
    LOADING SCREEN
@@ -655,6 +675,12 @@ a{color:inherit;text-decoration:none}
 }
 @media (max-width:720px){
   .sliders{grid-template-columns:1fr;padding:20px;gap:18px}
+  .slider-input{height:8px}
+  .slider-input::-webkit-slider-thumb{width:30px;height:30px}
+  .slider-input::-moz-range-thumb{width:30px;height:30px}
+  .count-slider{height:10px}
+  .count-slider::-webkit-slider-thumb{width:30px;height:30px}
+  .count-slider::-moz-range-thumb{width:30px;height:30px}
 }
 
 .dna-actions{
@@ -2110,6 +2136,14 @@ function bindSearch(){
 }
 
 async function doSearch(q, dropdownMode){
+  const btn = document.getElementById('searchBtn');
+  const results = document.getElementById('searchResults');
+  if(!dropdownMode){
+    btn.dataset.label = btn.dataset.label || btn.innerHTML;
+    btn.innerHTML = '<span class="spin-mini"></span>';
+    btn.disabled = true;
+    results.innerHTML = `<div class="loading-block"><span class="spin-mini"></span> "${esc(q)}" aranıyor…</div>`;
+  }
   try{
     const data = await fetchJSON(`${API}/api/search?q=${encodeURIComponent(q)}`);
     if(dropdownMode){
@@ -2119,8 +2153,13 @@ async function doSearch(q, dropdownMode){
     }
   }catch(e){
     if(!dropdownMode){
-      document.getElementById('searchResults').innerHTML =
+      results.innerHTML =
         `<div class="loading-block">Bağlantı kurulamadı. Flask sunucusunun açık olduğundan emin ol.</div>`;
+    }
+  }finally{
+    if(!dropdownMode){
+      btn.innerHTML = btn.dataset.label || '🔍';
+      btn.disabled = false;
     }
   }
 }
@@ -2138,8 +2177,8 @@ function renderDropdown(songs){
       <div class="dropdown-item" data-id="${s.track_id}">
         <div class="dropdown-icon" style="background:${st.grad}">${st.emoji}</div>
         <div class="dropdown-meta">
-          <div class="dropdown-title">${esc(s.track_name)}</div>
-          <div class="dropdown-artist">${esc(s.artists)}</div>
+          <div class="dropdown-title" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
+          <div class="dropdown-artist" title="${esc(s.artists)}">${esc(s.artists)}</div>
         </div>
         ${playLinks(s)}
       </div>
@@ -2174,8 +2213,8 @@ function renderResults(songs){
     card.innerHTML = `
       <div class="song-icon" style="background:${st.grad}">${st.emoji}</div>
       <div class="song-meta">
-        <div class="song-title">${esc(s.track_name)}</div>
-        <div class="song-artist">${esc(s.artists)} · ${esc(s.track_genre)}</div>
+        <div class="song-title" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
+        <div class="song-artist" title="${esc(s.artists)} · ${esc(s.track_genre)}">${esc(s.artists)} · ${esc(s.track_genre)}</div>
       </div>
       ${playLinks(s)}
       <div class="song-pop">${s.popularity}</div>
@@ -2672,8 +2711,8 @@ function renderSimilarList(listEl, songs){
     <div class="similar-row" data-id="${s.track_id||''}">
       <div class="similar-rank">${(i+1).toString().padStart(2,'0')}</div>
       <div class="similar-meta">
-        <div class="similar-name">${esc(s.track_name)}</div>
-        <div class="similar-artist">${esc(s.artists)}</div>
+        <div class="similar-name" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
+        <div class="similar-artist" title="${esc(s.artists)}">${esc(s.artists)}</div>
         ${renderReasons(s.reasons)}
       </div>
       ${playLinks(s)}
@@ -2735,8 +2774,8 @@ function renderPlaylist(host, songs, title){
           <div class="playlist-track" data-id="${s.track_id||''}">
             <div class="pt-num">${(i+1).toString().padStart(2,'0')}</div>
             <div class="pt-meta">
-              <div class="pt-name">${esc(s.track_name)}</div>
-              <div class="pt-artist">${esc(s.artists)}${s.track_genre?` · ${esc(s.track_genre)}`:''}</div>
+              <div class="pt-name" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
+              <div class="pt-artist" title="${esc(s.artists)}${s.track_genre?` · ${esc(s.track_genre)}`:''}">${esc(s.artists)}${s.track_genre?` · ${esc(s.track_genre)}`:''}</div>
             </div>
             ${playLinks(s)}
             <div class="pt-match">${s.match_percent}%</div>
