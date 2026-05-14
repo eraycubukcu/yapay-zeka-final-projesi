@@ -499,10 +499,17 @@ input:focus-visible,
 .dropdown-item:last-child{border-bottom:none}
 .dropdown-item:hover{background:rgba(255,79,139,.08)}
 .dropdown-icon{
+  position:relative;overflow:hidden;
   width:42px;height:42px;border-radius:10px;
   background:var(--grad,linear-gradient(135deg,var(--pink),var(--purple)));
   display:grid;place-items:center;font-size:18px;flex-shrink:0;color:#fff;
 }
+.dropdown-icon > img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;opacity:0;transition:opacity .35s;
+}
+.dropdown-icon > img.loaded{opacity:1}
+.dropdown-icon .fallback-emoji{position:relative;z-index:1}
 .dropdown-meta{flex:1;min-width:0}
 .dropdown-title{
   font-size:15px;font-weight:700;
@@ -557,11 +564,18 @@ input:focus-visible,
   border-color:rgba(255,255,255,.15);
 }
 .song-icon{
+  position:relative;overflow:hidden;
   width:52px;height:52px;border-radius:12px;
   display:grid;place-items:center;
   font-size:20px;color:#fff;
   flex-shrink:0;
 }
+.song-icon > img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;opacity:0;transition:opacity .35s;
+}
+.song-icon > img.loaded{opacity:1}
+.song-icon .fallback-emoji{position:relative;z-index:1}
 .song-meta{flex:1;min-width:0}
 .song-title{
   font-size:15px;font-weight:700;
@@ -820,9 +834,9 @@ input:focus-visible,
 }
 .similar-row{
   display:grid;
-  grid-template-columns:42px 1fr auto auto auto;
-  align-items:center;gap:16px;
-  padding:14px 18px;
+  grid-template-columns:36px 52px 1fr auto auto auto;
+  align-items:center;gap:14px;
+  padding:12px 16px;
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.06);
   border-radius:14px;
@@ -867,9 +881,39 @@ input:focus-visible,
   white-space:nowrap;
 }
 @media (max-width:520px){
-  .similar-row{grid-template-columns:32px 1fr auto auto;gap:10px;padding:12px}
+  .similar-row{grid-template-columns:28px 44px 1fr auto auto;gap:10px;padding:10px 12px}
   .similar-genre{display:none}
   .reason-chip{font-size:10px;padding:3px 8px}
+  .similar-art{width:44px;height:44px}
+}
+
+/* Album art (shared) */
+.album-art{
+  position:relative;
+  background:var(--grad,linear-gradient(135deg,var(--pink),var(--purple)));
+  overflow:hidden;
+  display:grid;place-items:center;
+  color:#fff;
+}
+.album-art > img{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity .35s ease;
+}
+.album-art > img.loaded{opacity:1}
+.album-art .fallback-emoji{
+  position:relative;z-index:1;
+  pointer-events:none;
+}
+.similar-art{
+  width:52px;height:52px;border-radius:10px;
+  font-size:22px;flex-shrink:0;
+}
+.pt-art{
+  width:48px;height:48px;border-radius:8px;
+  font-size:20px;flex-shrink:0;
 }
 
 /* Count picker + playlist button */
@@ -1013,9 +1057,9 @@ input:focus-visible,
   padding:8px 16px 16px;
 }
 .playlist-track{
-  display:grid;grid-template-columns:44px 1fr auto auto;
-  gap:14px;align-items:center;
-  padding:12px 14px;border-radius:12px;
+  display:grid;grid-template-columns:36px 48px 1fr auto auto;
+  gap:12px;align-items:center;
+  padding:10px 14px;border-radius:12px;
   transition:background .2s;
 }
 .playlist-track:hover{background:rgba(255,255,255,.05)}
@@ -1043,7 +1087,8 @@ input:focus-visible,
   .playlist-header{grid-template-columns:1fr;text-align:center;padding:22px 18px}
   .playlist-cover{width:96px;height:96px;font-size:42px;margin:0 auto}
   .playlist-actions{flex-direction:row;justify-content:center;flex-wrap:wrap}
-  .playlist-track{grid-template-columns:36px 1fr auto;gap:10px;padding:10px 12px}
+  .playlist-track{grid-template-columns:28px 40px 1fr auto;gap:10px;padding:8px 10px}
+  .pt-art{width:40px;height:40px;font-size:18px}
   .pt-match{display:none}
 }
 
@@ -2175,7 +2220,9 @@ function renderDropdown(songs){
     const st = CLUSTER_STYLES[s.cluster];
     return `
       <div class="dropdown-item" data-id="${s.track_id}">
-        <div class="dropdown-icon" style="background:${st.grad}">${st.emoji}</div>
+        <div class="dropdown-icon" data-art-id="${s.track_id}" style="background:${st.grad}">
+          <span class="fallback-emoji">${st.emoji}</span>
+        </div>
         <div class="dropdown-meta">
           <div class="dropdown-title" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
           <div class="dropdown-artist" title="${esc(s.artists)}">${esc(s.artists)}</div>
@@ -2191,6 +2238,7 @@ function renderDropdown(songs){
     });
   });
   drop.classList.add('show');
+  loadArtwork(songs, drop);
 }
 
 function renderResults(songs){
@@ -2206,12 +2254,15 @@ function renderResults(songs){
     <div class="results-grid" id="resultsGrid"></div>
   `;
   const grid = document.getElementById('resultsGrid');
-  songs.slice(0,30).forEach(s=>{
+  const visible = songs.slice(0,30);
+  visible.forEach(s=>{
     const st = CLUSTER_STYLES[s.cluster];
     const card = document.createElement('div');
     card.className = 'song-card';
     card.innerHTML = `
-      <div class="song-icon" style="background:${st.grad}">${st.emoji}</div>
+      <div class="song-icon" data-art-id="${s.track_id}" style="background:${st.grad}">
+        <span class="fallback-emoji">${st.emoji}</span>
+      </div>
       <div class="song-meta">
         <div class="song-title" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
         <div class="song-artist" title="${esc(s.artists)} · ${esc(s.track_genre)}">${esc(s.artists)} · ${esc(s.track_genre)}</div>
@@ -2222,6 +2273,7 @@ function renderResults(songs){
     card.addEventListener('click', ()=>openSong(s));
     grid.appendChild(card);
   });
+  loadArtwork(visible, grid);
 }
 
 /* ============================================================
@@ -2707,9 +2759,14 @@ function bindSimilarSection(scopeEl, songs, opts){
 
 function renderSimilarList(listEl, songs){
   listEl.style.display = 'flex';
-  listEl.innerHTML = songs.map((s,i)=>`
+  listEl.innerHTML = songs.map((s,i)=>{
+    const st = CLUSTER_STYLES[s.cluster] || {emoji:'🎵', grad:'linear-gradient(135deg,var(--pink),var(--purple))'};
+    return `
     <div class="similar-row" data-id="${s.track_id||''}">
       <div class="similar-rank">${(i+1).toString().padStart(2,'0')}</div>
+      <div class="album-art similar-art" data-art-id="${s.track_id||''}" style="background:${st.grad}">
+        <span class="fallback-emoji">${st.emoji}</span>
+      </div>
       <div class="similar-meta">
         <div class="similar-name" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
         <div class="similar-artist" title="${esc(s.artists)}">${esc(s.artists)}</div>
@@ -2718,13 +2775,14 @@ function renderSimilarList(listEl, songs){
       ${playLinks(s)}
       <div class="similar-genre">${esc(s.track_genre)}</div>
       <div class="similar-match">${s.match_percent}%</div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
   listEl.querySelectorAll('.similar-row').forEach(el=>{
     el.addEventListener('click', ()=>{
       if(el.dataset.id) fetchSongAndOpen(el.dataset.id);
     });
   });
+  loadArtwork(songs, listEl);
 }
 
 function renderPlaylist(host, songs, title){
@@ -2770,17 +2828,22 @@ function renderPlaylist(host, songs, title){
         Kopyala butonuyla tüm şarkı linklerini panoya alıp istediğin yerde kullanabilirsin.
       </div>
       <div class="playlist-tracks">
-        ${songs.map((s,i)=>`
+        ${songs.map((s,i)=>{
+          const st = CLUSTER_STYLES[s.cluster] || {emoji:'🎵', grad:'linear-gradient(135deg,var(--pink),var(--purple))'};
+          return `
           <div class="playlist-track" data-id="${s.track_id||''}">
             <div class="pt-num">${(i+1).toString().padStart(2,'0')}</div>
+            <div class="album-art pt-art" data-art-id="${s.track_id||''}" style="background:${st.grad}">
+              <span class="fallback-emoji">${st.emoji}</span>
+            </div>
             <div class="pt-meta">
               <div class="pt-name" title="${esc(s.track_name)}">${esc(s.track_name)}</div>
               <div class="pt-artist" title="${esc(s.artists)}${s.track_genre?` · ${esc(s.track_genre)}`:''}">${esc(s.artists)}${s.track_genre?` · ${esc(s.track_genre)}`:''}</div>
             </div>
             ${playLinks(s)}
             <div class="pt-match">${s.match_percent}%</div>
-          </div>
-        `).join('')}
+          </div>`;
+        }).join('')}
       </div>
     </div>
   `;
@@ -2800,7 +2863,66 @@ function renderPlaylist(host, songs, title){
       if(el.dataset.id) fetchSongAndOpen(el.dataset.id);
     });
   });
+  loadArtwork(songs, host);
   setTimeout(()=>host.scrollIntoView({behavior:'smooth', block:'start'}), 50);
+}
+
+/* ============================================================
+   ARTWORK (Spotify album covers)
+============================================================ */
+const _artworkCache = new Map();      // id -> url (or '' for confirmed-missing)
+const _artworkInflight = new Map();   // id -> Promise<string>
+
+async function loadArtwork(songs, scope){
+  if(!songs || !songs.length) return;
+  const ids = [...new Set(songs.map(s=>s && s.track_id).filter(Boolean))];
+  const toFetch = ids.filter(id => !_artworkCache.has(id) && !_artworkInflight.has(id));
+
+  if(toFetch.length){
+    const p = fetchJSON(`${API}/api/artwork`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ids: toFetch})
+    }).then(map => {
+      for(const id of toFetch){
+        const url = (map && typeof map[id] === 'string') ? map[id] : '';
+        _artworkCache.set(id, url);
+        _artworkInflight.delete(id);
+      }
+      return map;
+    }).catch(()=>{
+      for(const id of toFetch){
+        _artworkCache.set(id, '');
+        _artworkInflight.delete(id);
+      }
+      return {};
+    });
+    for(const id of toFetch) _artworkInflight.set(id, p);
+    await p;
+  }
+
+  // Cache'i bekleyenler için await
+  await Promise.all(ids.map(id =>
+    _artworkInflight.get(id) || Promise.resolve()
+  ));
+
+  const root = scope || document;
+  ids.forEach(id => {
+    const url = _artworkCache.get(id);
+    if(!url) return;
+    root.querySelectorAll(`[data-art-id="${CSS.escape(id)}"]`).forEach(host => {
+      if(host.querySelector('img')) return;  // zaten yüklendi
+      const img = new Image();
+      img.alt = '';
+      img.decoding = 'async';
+      img.loading = 'lazy';
+      img.referrerPolicy = 'no-referrer';
+      img.addEventListener('load', () => img.classList.add('loaded'));
+      img.addEventListener('error', () => img.remove());
+      img.src = url;
+      host.appendChild(img);
+    });
+  });
 }
 
 /* ============================================================

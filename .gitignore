@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 venv/
 .env
+models/artwork_cache.json
+models/artwork_cache.json.tmp
