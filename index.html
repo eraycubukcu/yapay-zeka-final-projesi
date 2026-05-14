@@ -1078,6 +1078,7 @@ input:focus-visible,
 .mm-rail::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:10px}
 .mm-card{
   flex:0 0 156px;
+  width:156px;max-width:156px;min-width:0;
   scroll-snap-align:start;
   position:relative;
   padding:14px;
@@ -1086,6 +1087,7 @@ input:focus-visible,
   border-radius:16px;
   cursor:pointer;
   transition:transform .2s,background .2s,border-color .2s;
+  overflow:hidden;
 }
 .mm-card:hover{
   transform:translateY(-4px);
@@ -1102,10 +1104,12 @@ input:focus-visible,
 }
 .mm-title{
   font-size:13px;font-weight:700;
+  display:block;max-width:100%;min-width:0;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .mm-artist{
   font-size:11px;color:var(--txt-dim);
+  display:block;max-width:100%;min-width:0;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   margin-top:2px;
 }
@@ -1173,7 +1177,7 @@ input:focus-visible,
 }
 
 @media (max-width:520px){
-  .mm-card{flex:0 0 132px;padding:12px}
+  .mm-card{flex:0 0 132px;width:132px;max-width:132px;padding:12px}
   .mm-cover{font-size:28px}
 }
 
@@ -1727,26 +1731,55 @@ input:focus-visible,
 
 /* Compare mode UI */
 .btn-compare{
-  padding:10px 18px;border-radius:100px;
-  font-size:11px;font-weight:800;letter-spacing:.18em;
-  text-transform:uppercase;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.15);
-  color:var(--txt);
-  transition:all .2s;
-  white-space:nowrap;
+  position:relative;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:0 22px;height:44px;
+  margin-top:18px;margin-left:6px;
+  border-radius:100px;
+  font-size:12px;font-weight:800;letter-spacing:.16em;
+  text-transform:uppercase;white-space:nowrap;
+  color:#fff;
+  background:linear-gradient(135deg,var(--pink) 0%,var(--purple) 55%,var(--blue) 100%);
+  background-size:220% 100%;background-position:0% 50%;
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:
+    0 8px 22px -8px rgba(255,79,139,.6),
+    0 8px 22px -10px rgba(43,179,255,.5),
+    inset 0 1px 0 rgba(255,255,255,.25);
+  cursor:pointer;overflow:hidden;
+  transition:transform .2s ease, box-shadow .2s ease, background-position .55s ease;
+}
+.btn-compare::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.38) 50%,transparent 70%);
+  transform:translateX(-130%);
+  transition:transform .75s ease;
+  pointer-events:none;
 }
 .btn-compare:hover{
-  background:linear-gradient(135deg,var(--pink),var(--blue));
-  border-color:transparent;color:#fff;transform:translateY(-2px);
+  transform:translateY(-2px);
+  background-position:100% 50%;
+  box-shadow:
+    0 12px 30px -8px rgba(255,79,139,.7),
+    0 12px 30px -10px rgba(43,179,255,.6),
+    inset 0 1px 0 rgba(255,255,255,.32);
+}
+.btn-compare:hover::before{transform:translateX(130%)}
+.btn-compare:active{transform:translateY(0) scale(.97)}
+.btn-compare:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.btn-compare-icon{
+  display:inline-grid;place-items:center;
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(255,255,255,.2);
+  flex-shrink:0;
+}
+.btn-compare-icon svg{
+  width:14px;height:14px;display:block;
+  fill:none;stroke:currentColor;
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
 }
 [data-theme="light"] .btn-compare{
-  background:#fff;border:1px solid var(--ln-strong);color:var(--txt);
-  box-shadow:var(--shadow-sm);
-}
-[data-theme="light"] .btn-compare:hover{
-  background:linear-gradient(135deg,var(--pink),var(--blue));
-  color:#fff;border-color:transparent;
+  border-color:rgba(255,255,255,.45);
 }
 
 .compare-strip{
@@ -3737,7 +3770,10 @@ async function openSong(s){
     `${st.emoji} K${s.cluster} · ${esc(s.cluster_name || clusterNames[s.cluster] || DEFAULT_NAMES[s.cluster])}`;
   const actions = document.getElementById('modalActions');
   actions.innerHTML = starButton(s, 'lg') + playLinks(s, 'lg') +
-    `<button class="btn-compare" type="button" title="Başka bir şarkıyla karşılaştır">🔀 Karşılaştır</button>`;
+    `<button class="btn-compare" type="button" title="Başka bir şarkıyla karşılaştır">
+      <span class="btn-compare-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4 L4 7 L7 10"/><path d="M4 7 H15 a4 4 0 0 1 4 4 V12"/><path d="M17 20 L20 17 L17 14"/><path d="M20 17 H9 a4 4 0 0 1 -4 -4 V12"/></svg></span>
+      <span>Karşılaştır</span>
+    </button>`;
   actions._songData = s;
   actions.dataset.id = s.track_id || '';
   bindStars(actions);
