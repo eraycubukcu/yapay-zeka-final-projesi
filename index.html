@@ -846,6 +846,181 @@ a{color:inherit;text-decoration:none}
   .reason-chip{font-size:10px;padding:3px 8px}
 }
 
+/* Count picker + playlist button */
+.count-picker{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  padding:18px 22px;
+  margin:20px 0 16px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+}
+.count-picker-left{
+  display:flex;align-items:center;gap:14px;flex:1;min-width:240px;
+}
+.count-picker-label{
+  font-size:11px;font-weight:800;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--txt-dim);
+  white-space:nowrap;
+}
+.count-picker-value{
+  font-family:var(--display);
+  font-size:34px;line-height:1;
+  background:linear-gradient(135deg,var(--mint),var(--yellow));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  min-width:54px;text-align:center;
+}
+.count-slider{
+  -webkit-appearance:none;appearance:none;
+  flex:1;min-width:140px;height:6px;border-radius:100px;
+  background:linear-gradient(90deg,var(--mint) 0%,var(--mint) var(--p,10%),rgba(255,255,255,.12) var(--p,10%));
+  outline:none;
+}
+.count-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--mint);
+  border:3px solid var(--bg);
+  cursor:pointer;
+  box-shadow:0 4px 14px rgba(117,255,180,.45);
+  transition:transform .15s ease;
+}
+.count-slider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.count-slider::-moz-range-thumb{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--mint);border:3px solid var(--bg);cursor:pointer;
+  box-shadow:0 4px 14px rgba(117,255,180,.45);
+}
+.btn-playlist{
+  padding:13px 22px;border-radius:100px;
+  font-size:12px;font-weight:800;letter-spacing:.18em;
+  text-transform:uppercase;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  color:#fff;
+  box-shadow:0 8px 24px rgba(255,79,139,.35);
+  transition:transform .2s ease,box-shadow .2s ease;
+  white-space:nowrap;
+}
+.btn-playlist:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,79,139,.5)}
+.btn-playlist:active{transform:translateY(0)}
+@media (max-width:520px){
+  .count-picker{gap:14px;padding:14px 16px}
+  .count-picker-value{font-size:28px}
+  .btn-playlist{width:100%;padding:14px;font-size:11px}
+}
+
+/* Playlist panel */
+.playlist-panel{
+  margin:24px 0 12px;
+  background:linear-gradient(160deg,rgba(110,43,255,.18),rgba(255,79,139,.12) 60%,rgba(0,0,0,0));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:28px;
+  overflow:hidden;
+  animation:playlistIn .5s ease;
+}
+@keyframes playlistIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.playlist-header{
+  display:grid;grid-template-columns:120px 1fr auto;gap:22px;
+  align-items:center;
+  padding:28px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.playlist-cover{
+  width:120px;height:120px;border-radius:18px;
+  background:conic-gradient(from 45deg,var(--pink),var(--yellow),var(--mint),var(--purple),var(--pink));
+  display:grid;place-items:center;
+  font-size:54px;
+  box-shadow:0 20px 50px rgba(0,0,0,.4);
+}
+.playlist-meta{min-width:0}
+.playlist-eyebrow{
+  font-size:11px;font-weight:800;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--mint);
+  margin-bottom:10px;
+}
+.playlist-title{
+  font-family:var(--display);
+  font-size:clamp(28px,5vw,46px);
+  line-height:1;letter-spacing:-.01em;
+  background:linear-gradient(135deg,var(--pink),var(--yellow));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:10px;
+}
+.playlist-sub{
+  font-size:13px;color:var(--txt-dim);
+  display:flex;flex-wrap:wrap;gap:14px;
+}
+.playlist-sub b{color:var(--txt);font-weight:700}
+.playlist-actions{display:flex;flex-direction:column;gap:10px}
+.btn-spotify-open{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 22px;border-radius:100px;
+  font-size:12px;font-weight:800;letter-spacing:.18em;
+  text-transform:uppercase;
+  background:#1DB954;color:#000;
+  box-shadow:0 8px 24px rgba(29,185,84,.35);
+  transition:transform .2s ease,box-shadow .2s ease;
+  white-space:nowrap;
+}
+.btn-spotify-open:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(29,185,84,.5)}
+.btn-spotify-open svg{width:18px;height:18px}
+.btn-copy{
+  padding:10px 18px;border-radius:100px;
+  font-size:11px;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--txt-dim);
+  transition:all .2s;
+  white-space:nowrap;
+}
+.btn-copy:hover{background:rgba(255,255,255,.12);color:var(--txt)}
+.playlist-hint{
+  font-size:11px;color:var(--txt-dim);
+  padding:0 28px 12px;letter-spacing:.05em;
+}
+.playlist-tracks{
+  display:flex;flex-direction:column;
+  padding:8px 16px 16px;
+}
+.playlist-track{
+  display:grid;grid-template-columns:44px 1fr auto auto;
+  gap:14px;align-items:center;
+  padding:12px 14px;border-radius:12px;
+  transition:background .2s;
+}
+.playlist-track:hover{background:rgba(255,255,255,.05)}
+.pt-num{
+  font-family:var(--display);
+  font-size:18px;color:var(--txt-dim);
+  text-align:center;
+}
+.pt-meta{min-width:0}
+.pt-name{
+  font-weight:700;font-size:15px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.pt-artist{
+  font-size:12px;color:var(--txt-dim);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.pt-match{
+  font-family:var(--display);
+  font-size:16px;
+  background:linear-gradient(135deg,var(--mint),var(--green));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+@media (max-width:640px){
+  .playlist-header{grid-template-columns:1fr;text-align:center;padding:22px 18px}
+  .playlist-cover{width:96px;height:96px;font-size:42px;margin:0 auto}
+  .playlist-actions{flex-direction:row;justify-content:center;flex-wrap:wrap}
+  .playlist-track{grid-template-columns:36px 1fr auto;gap:10px;padding:10px 12px}
+  .pt-match{display:none}
+}
+
 /* ============================================================
    ABOUT
 ============================================================ */
@@ -1356,6 +1531,7 @@ a{color:inherit;text-decoration:none}
     <div class="nav-right">
       <div class="nav-tabs">
         <button class="nav-tab active" data-page="home">Ana Sayfa</button>
+        <button class="nav-tab" data-page="search">Şarkı Ara</button>
         <button class="nav-tab" data-page="dna">DNA Oluştur</button>
         <button class="nav-tab" data-page="about">Hakkında</button>
       </div>
@@ -1387,7 +1563,7 @@ a{color:inherit;text-decoration:none}
       </p>
       <div class="hero-cta">
         <button class="btn btn-primary" data-goto="dna">DNA Oluştur →</button>
-        <button class="btn btn-ghost" onclick="document.getElementById('searchInput').focus()">Şarkı Ara</button>
+        <button class="btn btn-ghost" data-goto="search">Şarkı Ara</button>
       </div>
     </div>
   </section>
@@ -1418,13 +1594,33 @@ a{color:inherit;text-decoration:none}
     <div class="cluster-grid" id="clusterGrid"></div>
   </section>
 
-  <!-- SEARCH -->
-  <section class="section">
-    <div class="section-head" style="text-align:center">
-      <div class="section-eyebrow" style="color:var(--mint)">Şarkı keşfi</div>
-      <h2 class="section-title">SEVDİĞİN<br>ŞARKIYI BUL</h2>
-    </div>
 
+</div>
+
+<!-- ============================================================
+     PAGE 2: SEARCH
+============================================================ -->
+<div class="page" id="page-search">
+
+  <section class="hero" style="min-height:55vh">
+    <div class="blob blob-1" style="background:var(--mint)"></div>
+    <div class="blob blob-2" style="background:var(--pink)"></div>
+    <div class="blob blob-3" style="background:var(--yellow)"></div>
+    <div class="hero-inner">
+      <span class="eyebrow" style="color:var(--mint);border-color:var(--mint)">Şarkı keşfi</span>
+      <h1 class="hero-title">
+        <span class="row gradient-pink">SEVDİĞİN</span>
+        <span class="row gradient-yellow">ŞARKIYI</span>
+        <span class="row gradient-purple">BUL</span>
+      </h1>
+      <p class="hero-desc">
+        89.740 şarkı arasından adını yaz, akustik DNA'sını gör, en yakın eşleşmelerden anında bir
+        playlist oluştur.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
     <div class="search-wrap">
       <div class="search-box">
         <input type="text" class="search-input" id="searchInput"
@@ -1451,7 +1647,7 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <!-- ============================================================
-     PAGE 2: DNA
+     PAGE 3: DNA
 ============================================================ -->
 <div class="page" id="page-dna">
 
@@ -1529,7 +1725,7 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <!-- ============================================================
-     PAGE 3: ABOUT
+     PAGE 4: ABOUT
 ============================================================ -->
 <div class="page" id="page-about">
   <section class="hero" style="min-height:50vh">
@@ -2046,7 +2242,7 @@ async function runPredict(){
     const sim2 = await fetchJSON(`${API}/api/similar`, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({...values, cluster:pred.svm_cluster})
+      body:JSON.stringify({...values, cluster:pred.svm_cluster, n_top:50, count:50, limit:50})
     });
     lastResult = {pred, sim:sim2, values};
     renderResult(pred, sim2, values);
@@ -2105,34 +2301,20 @@ function renderResult(pred, sim, values){
     </div>
 
     <div class="similar-head">
-      <h3 class="similar-title">EŞLEŞEN<br>10 ŞARKI</h3>
+      <h3 class="similar-title">EŞLEŞEN<br><span class="similar-count">${Math.min(10, sim.songs.length)}</span> ŞARKI</h3>
       <span style="font-size:12px;color:var(--txt-dim);letter-spacing:.2em;text-transform:uppercase">
         K${cid} kümesinden
       </span>
     </div>
-    <div class="similar-grid">
-      ${sim.songs.map((s,i)=>`
-        <div class="similar-row" data-idx="${i}">
-          <div class="similar-rank">${(i+1).toString().padStart(2,'0')}</div>
-          <div class="similar-meta">
-            <div class="similar-name">${esc(s.track_name)}</div>
-            <div class="similar-artist">${esc(s.artists)}</div>
-            ${renderReasons(s.reasons)}
-          </div>
-          ${playLinks(s)}
-          <div class="similar-genre">${esc(s.track_genre)}</div>
-          <div class="similar-match">${s.match_percent}%</div>
-        </div>
-      `).join('')}
-    </div>
+    ${buildCountPicker(sim.songs.length, `K${cid} · ${esc(pred.svm_name)} Mix`)}
+    <div class="similar-grid" id="resultSimilar"></div>
+    <div id="resultPlaylist"></div>
   `;
-  // bind similar clicks
-  wrap.querySelectorAll('.similar-row').forEach((el,i)=>{
-    el.addEventListener('click', ()=>{
-      const s = sim.songs[i];
-      // we don't have full audio features here; fetch full song
-      fetchSongAndOpen(s.track_id);
-    });
+  bindSimilarSection(wrap, sim.songs, {
+    listId:'resultSimilar',
+    playlistId:'resultPlaylist',
+    countLabelSel:'.similar-count',
+    title:`K${cid} · ${pred.svm_name} Mix`
   });
 
   wrap.classList.add('show');
@@ -2302,10 +2484,12 @@ async function openSong(s){
       </div>
     </div>
     <div class="similar-head">
-      <h3 class="similar-title" style="font-size:28px">EN YAKIN<br>10 ŞARKI</h3>
+      <h3 class="similar-title" style="font-size:28px">EN YAKIN<br><span class="modal-similar-count">10</span> ŞARKI</h3>
     </div>
     <div class="loading-block" id="simLoading"><span class="spin-mini"></span> Aranıyor…</div>
+    <div id="modalCountPicker"></div>
     <div class="similar-grid" id="modalSimilar" style="display:none"></div>
+    <div id="modalPlaylist"></div>
   `;
 
   document.getElementById('modal').classList.add('show');
@@ -2320,31 +2504,169 @@ async function openSong(s){
         danceability:s.danceability, energy:s.energy, loudness:s.loudness,
         speechiness:s.speechiness, acousticness:s.acousticness,
         instrumentalness:s.instrumentalness, liveness:s.liveness,
-        valence:s.valence, tempo:s.tempo
+        valence:s.valence, tempo:s.tempo,
+        n_top:50, count:50, limit:50
       })
     });
     const list = document.getElementById('modalSimilar');
     document.getElementById('simLoading').style.display = 'none';
     list.style.display = 'flex';
-    list.innerHTML = sim.songs.map((ss,i)=>`
-      <div class="similar-row" data-id="${ss.track_id}">
-        <div class="similar-rank">${(i+1).toString().padStart(2,'0')}</div>
-        <div class="similar-meta">
-          <div class="similar-name">${esc(ss.track_name)}</div>
-          <div class="similar-artist">${esc(ss.artists)}</div>
-          ${renderReasons(ss.reasons)}
-        </div>
-        ${playLinks(ss)}
-        <div class="similar-genre">${esc(ss.track_genre)}</div>
-        <div class="similar-match">${ss.match_percent}%</div>
-      </div>
-    `).join('');
-    list.querySelectorAll('.similar-row').forEach(el=>{
-      el.addEventListener('click', ()=>fetchSongAndOpen(el.dataset.id));
+    const cpHost = document.getElementById('modalCountPicker');
+    cpHost.innerHTML = buildCountPicker(sim.songs.length, `${s.track_name} Mix`);
+    bindSimilarSection(document.getElementById('modal'), sim.songs, {
+      listId:'modalSimilar',
+      playlistId:'modalPlaylist',
+      countLabelSel:'.modal-similar-count',
+      title:`${s.track_name} Mix`
     });
   }catch(e){
     document.getElementById('simLoading').textContent = 'Benzer şarkılar yüklenemedi.';
   }
+}
+
+/* ============================================================
+   SIMILAR + PLAYLIST
+============================================================ */
+function buildCountPicker(maxAvailable, defaultTitle){
+  const cap = Math.min(50, Math.max(5, maxAvailable || 10));
+  const initial = Math.min(10, cap);
+  return `
+    <div class="count-picker" data-cap="${cap}" data-title="${esc(defaultTitle)}">
+      <div class="count-picker-left">
+        <span class="count-picker-label">Adet</span>
+        <span class="count-picker-value">${initial}</span>
+        <input type="range" class="count-slider" min="5" max="${cap}" value="${initial}"
+               style="--p:${((initial-5)/(cap-5||1))*100}%">
+      </div>
+      <button class="btn-playlist">🎵 Playlist Oluştur</button>
+    </div>
+  `;
+}
+
+function bindSimilarSection(scopeEl, songs, opts){
+  const list = scopeEl.querySelector('#'+opts.listId);
+  const playlistHost = scopeEl.querySelector('#'+opts.playlistId);
+  const picker = scopeEl.querySelector('.count-picker');
+  if(!list || !picker) return;
+  const slider = picker.querySelector('.count-slider');
+  const valueEl = picker.querySelector('.count-picker-value');
+  const btn = picker.querySelector('.btn-playlist');
+  const titleLabels = scopeEl.querySelectorAll(opts.countLabelSel);
+
+  const setN = n => {
+    valueEl.textContent = n;
+    titleLabels.forEach(el => el.textContent = n);
+    renderSimilarList(list, songs.slice(0, n));
+    const cap = parseInt(slider.max);
+    const min = parseInt(slider.min);
+    slider.style.setProperty('--p', `${((n-min)/(cap-min||1))*100}%`);
+  };
+
+  slider.addEventListener('input', ()=>setN(parseInt(slider.value)));
+  btn.addEventListener('click', ()=>{
+    const n = parseInt(slider.value);
+    renderPlaylist(playlistHost, songs.slice(0, n), picker.dataset.title || 'Müzik DNA Mix');
+  });
+
+  setN(parseInt(slider.value));
+}
+
+function renderSimilarList(listEl, songs){
+  listEl.style.display = 'flex';
+  listEl.innerHTML = songs.map((s,i)=>`
+    <div class="similar-row" data-id="${s.track_id||''}">
+      <div class="similar-rank">${(i+1).toString().padStart(2,'0')}</div>
+      <div class="similar-meta">
+        <div class="similar-name">${esc(s.track_name)}</div>
+        <div class="similar-artist">${esc(s.artists)}</div>
+        ${renderReasons(s.reasons)}
+      </div>
+      ${playLinks(s)}
+      <div class="similar-genre">${esc(s.track_genre)}</div>
+      <div class="similar-match">${s.match_percent}%</div>
+    </div>
+  `).join('');
+  listEl.querySelectorAll('.similar-row').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      if(el.dataset.id) fetchSongAndOpen(el.dataset.id);
+    });
+  });
+}
+
+function renderPlaylist(host, songs, title){
+  if(!host || !songs.length){ return; }
+  const ids = songs.map(s=>s.track_id).filter(Boolean);
+  const genreCount = {};
+  songs.forEach(s=>{
+    const g = s.track_genre || 'diğer';
+    genreCount[g] = (genreCount[g]||0)+1;
+  });
+  const topGenres = Object.entries(genreCount)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,3)
+    .map(([g,n])=>`<b>${esc(g)}</b> ×${n}`)
+    .join('  ·  ');
+  const avgMatch = Math.round(
+    songs.reduce((a,s)=>a+(parseFloat(s.match_percent)||0),0) / songs.length
+  );
+
+  const tracksetName = encodeURIComponent(title.slice(0,40));
+  const tracksetUri = `spotify:trackset:${tracksetName}:${ids.join(',')}`;
+  const trackIdsLines = ids.map(id=>`https://open.spotify.com/track/${id}`).join('\n');
+
+  host.innerHTML = `
+    <div class="playlist-panel">
+      <div class="playlist-header">
+        <div class="playlist-cover">🎵</div>
+        <div class="playlist-meta">
+          <div class="playlist-eyebrow">PLAYLIST · ${songs.length} ŞARKI</div>
+          <div class="playlist-title">${esc(title)}</div>
+          <div class="playlist-sub">
+            <span>Ort. eşleşme: <b>%${avgMatch}</b></span>
+            ${topGenres ? `<span>${topGenres}</span>` : ''}
+          </div>
+        </div>
+        <div class="playlist-actions">
+          <a class="btn-spotify-open" href="${tracksetUri}">${SPOTIFY_SVG}<span>Spotify'da Aç</span></a>
+          <button class="btn-copy" type="button">🔗 Linkleri Kopyala</button>
+        </div>
+      </div>
+      <div class="playlist-hint">
+        💡 "Spotify'da Aç" Spotify masaüstü uygulamasını açar.
+        Kopyala butonuyla tüm şarkı linklerini panoya alıp istediğin yerde kullanabilirsin.
+      </div>
+      <div class="playlist-tracks">
+        ${songs.map((s,i)=>`
+          <div class="playlist-track" data-id="${s.track_id||''}">
+            <div class="pt-num">${(i+1).toString().padStart(2,'0')}</div>
+            <div class="pt-meta">
+              <div class="pt-name">${esc(s.track_name)}</div>
+              <div class="pt-artist">${esc(s.artists)}${s.track_genre?` · ${esc(s.track_genre)}`:''}</div>
+            </div>
+            ${playLinks(s)}
+            <div class="pt-match">${s.match_percent}%</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  host.querySelector('.btn-copy').addEventListener('click', async (e)=>{
+    try{
+      await navigator.clipboard.writeText(trackIdsLines);
+      e.currentTarget.textContent = '✓ Kopyalandı';
+      setTimeout(()=>{ e.currentTarget.textContent = '🔗 Linkleri Kopyala'; }, 1800);
+    }catch(_){
+      e.currentTarget.textContent = '✗ Kopyalanamadı';
+    }
+  });
+  host.querySelectorAll('.playlist-track').forEach(el=>{
+    el.addEventListener('click', (ev)=>{
+      if(ev.target.closest('a,button')) return;
+      if(el.dataset.id) fetchSongAndOpen(el.dataset.id);
+    });
+  });
+  setTimeout(()=>host.scrollIntoView({behavior:'smooth', block:'start'}), 50);
 }
 
 /* ============================================================
