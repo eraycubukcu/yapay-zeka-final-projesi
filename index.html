@@ -2531,12 +2531,24 @@ async function openSong(s){
 ============================================================ */
 function dedupeSongs(songs){
   if(!Array.isArray(songs)) return [];
-  const seen = new Set();
+  const seenIds = new Set();
+  const seenNames = new Set();
   const out = [];
+  const norm = s => {
+    const name = (s.track_name||'').toLowerCase()
+      .replace(/\s*[-–—]\s*(remaster|remastered|live|single|edit|version|mix|radio edit|acoustic|deluxe|bonus|stereo|mono)[^|]*$/i, '')
+      .replace(/\s*\([^)]*(remaster|remastered|live|single|edit|version|mix|radio|acoustic|deluxe|bonus|stereo|mono|feat|featuring|with)[^)]*\)/gi, '')
+      .replace(/\s*\[[^\]]*(remaster|remastered|live|single|edit|version|mix|radio|acoustic|deluxe|bonus|stereo|mono|feat|featuring|with)[^\]]*\]/gi, '')
+      .replace(/\s+/g,' ').trim();
+    const artist = (s.artists||'').toLowerCase().split(/[,;&]|feat\.?|ft\.?/)[0].trim();
+    return `${name}|${artist}`;
+  };
   for(const s of songs){
-    const key = s.track_id || `${(s.track_name||'').toLowerCase()}|${(s.artists||'').toLowerCase()}`;
-    if(!key || seen.has(key)) continue;
-    seen.add(key);
+    if(s.track_id && seenIds.has(s.track_id)) continue;
+    const nameKey = norm(s);
+    if(nameKey !== '|' && seenNames.has(nameKey)) continue;
+    if(s.track_id) seenIds.add(s.track_id);
+    seenNames.add(nameKey);
     out.push(s);
   }
   return out;
